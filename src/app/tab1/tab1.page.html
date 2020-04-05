@@ -17,9 +17,14 @@
       <ion-row class="ion-align-items-center"
                *ngFor = "let gridRow of GridData">
           <ion-col class="ion-align-self-center ion-text-center"
-                   *ngFor = "let gridCol of gridRow">
-              <ion-icon [name]=gridCol[1]></ion-icon><br />
-              {{ gridCol[0] }}
+                   *ngFor = "let gridCol of gridRow.data">
+              <ion-avatar class="ion-align-self-center"s>
+                  <ion-button color="dark" 
+                              (click)="lessonNav(gridCol)">
+                      <ion-icon [name]=gridCol.icon></ion-icon>
+                  </ion-button>
+                  <ion-label>{{ gridCol.title }}</ion-label>
+              </ion-avatar>
           </ion-col>
       </ion-row>
   </ion-grid>
