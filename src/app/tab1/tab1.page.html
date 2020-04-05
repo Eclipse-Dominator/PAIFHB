@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 1
+      {{ Title }}
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,9 +9,18 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
+      <ion-title size="large">{{ Title }}</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <ion-grid class="ion-margin">
+      <ion-row class="ion-align-items-center"
+               *ngFor = "let gridRow of GridData">
+          <ion-col class="ion-align-self-center ion-text-center"
+                   *ngFor = "let gridCol of gridRow">
+              <ion-icon [name]=gridCol[1]></ion-icon><br />
+              {{ gridCol[0] }}
+          </ion-col>
+      </ion-row>
+  </ion-grid>
 </ion-content>
