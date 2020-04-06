@@ -1,15 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\e2e",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\explore-container",
-    "\\src\\app\\tab1",
-    "\\src\\app\\tab2",
+    "\\src\\app\\lesscontent",
+    "\\src\\app\\lesson",
+    "\\src\\app\\services",
     "\\src\\app\\tab3",
-    "\\src\\assets"
+    "\\src\\assets",
+    "\\src\\assets\\content",
+    "\\src\\assets\\content\\text"
   ],
-  "SelectedNode": "\\src\\app\\tab2\\tab2.page.html",
+  "SelectedNode": "\\src\\assets\\content\\text\\forloops.txt",
   "PreviewInSolutionExplorer": false
 }
