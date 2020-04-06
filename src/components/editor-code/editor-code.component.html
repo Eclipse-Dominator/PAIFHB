@@ -1,0 +1,22 @@
+<form (ngSubmit)="onSubmit()">
+  <ion-item>
+    <ion-textarea autofocus="true" rows=20 [(ngModel)]="editor.code_content" name="code_input"></ion-textarea>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Compiler</ion-label>
+    <ion-select value="python3" interface="action-sheet" [(ngModel)]="editor.compiler" name="code_content">
+      <ion-select-option value="python3">Python 3</ion-select-option>
+      <ion-select-option value="cpp">C++</ion-select-option>
+      <ion-select-option value="c">C</ion-select-option>
+    </ion-select>
+  </ion-item>
+  
+  <ion-button type="submit">
+    Run and Compile
+  </ion-button>
+</form>
+
+<ion-item *ngIf="result">
+  <pre>{{ result.stdout }}</pre>
+</ion-item> 
