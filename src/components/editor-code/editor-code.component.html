@@ -1,22 +1,65 @@
 <form (ngSubmit)="onSubmit()">
-  <ion-item>
-    <ion-textarea autofocus="true" rows=20 [(ngModel)]="editor.code_content" name="code_input"></ion-textarea>
-  </ion-item>
+  <ion-card>
 
-  <ion-item>
-    <ion-label>Compiler</ion-label>
-    <ion-select value="python3" interface="action-sheet" [(ngModel)]="editor.compiler" name="code_content">
-      <ion-select-option value="python3">Python 3</ion-select-option>
-      <ion-select-option value="cpp">C++</ion-select-option>
-      <ion-select-option value="c">C</ion-select-option>
-    </ion-select>
-  </ion-item>
-  
-  <ion-button type="submit">
-    Run and Compile
-  </ion-button>
+    <ion-item>
+      <ion-label>Compiler</ion-label>
+      <ion-select value="python3" interface="action-sheet" [(ngModel)]="editor.compiler" name="code_compiler">
+        <ion-select-option value="python3">Python 3</ion-select-option>
+        <ion-select-option value="cpp">C++</ion-select-option>
+        <ion-select-option value="c">C</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating" color="primary">Code</ion-label>
+      <ion-textarea autofocus="true" rows=12 [(ngModel)]="editor.code_content" name="code_content" required></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>stdIn</ion-label>
+      <ion-toggle [(ngModel)]="editor.add_input" name="input-toggle"></ion-toggle>
+    </ion-item>
+    
+    <ion-item *ngIf="editor.add_input">
+      <ion-label position="floating" color="primary">Input</ion-label>
+      <ion-textarea rows=5 [(ngModel)]="editor.code_input" name="code_input"></ion-textarea>
+    </ion-item>
+    <ion-card-content>
+      <ion-button expand="block" type="submit" [disabled]="editor.code_content == ''||submitted">
+        
+        <div *ngIf="!submitted">
+          Run and Compile
+        </div>
+        
+        <ion-spinner name="crescent" *ngIf="submitted"></ion-spinner>
+      </ion-button>
+    </ion-card-content>
+
+  </ion-card>
+
+
 </form>
 
-<ion-item *ngIf="result">
-  <pre>{{ result.stdout }}</pre>
-</ion-item> 
+<ion-grid *ngIf="result">
+  <ion-row> 
+    <ion-col *ngIf="result.stdout!=''">
+      <ion-card>
+        <ion-card-content>
+          <ion-label position="stacked" color="primary">StdOut</ion-label>
+          <pre>{{ result.stdout }}</pre>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+    
+    <ion-col *ngIf="result.stderr!=''">
+      <ion-card>
+        <ion-card-content>
+          <ion-label position="stacked" color="danger">StdErr</ion-label>
+          <ion-text>
+            <pre>{{ result.stderr }}</pre>
+          </ion-text>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-grid>
