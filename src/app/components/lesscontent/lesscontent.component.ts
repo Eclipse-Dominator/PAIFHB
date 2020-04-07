@@ -8,10 +8,7 @@ import { LessonDataService, LessonData, LessonItem } from '../../services/lesson
   styleUrls: ['./lesscontent.component.scss'],
 })
 export class LesscontentComponent implements OnInit {
-
-    @Input() lessonID: string;
-    // TODO: get content
-    content;
+    content: string;
     
     constructor(
         private dataSvce: LessonDataService

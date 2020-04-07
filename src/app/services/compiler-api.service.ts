@@ -154,6 +154,14 @@ export interface Response {
   result:          string;
 }
 
+export interface FilteredResponse {
+  language:        string;
+  stdout:          string;
+  stderr:          string;
+  time:            string;
+  result:          boolean;
+}
+
 export interface IncompleteResponse {
   id:              string;
   status:          string;

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CompilerApiService, Response } from '../../services/compiler-api.service';
+import { CompilerApiService, Response, FilteredResponse } from '../../services/compiler-api.service';
 import { LoadingController } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-editor-code',
@@ -9,9 +10,15 @@ import { LoadingController } from '@ionic/angular';
 })
 export class EditorCodeComponent implements OnInit {
   submitted:boolean = false;
-  result:Response;
-  btn_txt:string = "Compile and Run";
+  result:FilteredResponse = {
+    language: "",
+    stdout: "",
+    stderr:"",
+    time:"",
+    result: true
+  };
   editor;
+  
 
   constructor(
     private cApi:CompilerApiService,
@@ -29,18 +36,18 @@ export class EditorCodeComponent implements OnInit {
 
   onSubmit():void {
     //console.log(this.editor);
-
+    this.result.language = "";
     let tmp_input:string = "";
     if(this.editor.add_input) tmp_input = this.editor.code_input;
     
-    this.submitted = true;
+    this.submitted = true; 
 
     this.cApi.compile_code(this.editor.code_content,tmp_input,this.editor.compiler)
     .then((data:any) => {
       return this.cApi.continued_query(data.id,5);
     }).then((result) => {
       console.log(result);
-      this.result = result;
+      this.getImptData(result);
       this.submitted = false;
     })
     .catch((error) => {
@@ -48,4 +55,27 @@ export class EditorCodeComponent implements OnInit {
       this.submitted = false;
     });
   }
+
+  getImptData(data:Response):void {
+    this.result.language = data.language;
+
+    if (data.build_result === "failure"){
+      this.result.stderr = "build exit code: "+data.build_exit_code+'\n'+data.build_stderr;
+      this.result.stdout = data.build_stdout;
+      this.result.result = false;
+    } else{
+      
+      this.result.stdout = data.stdout;
+      if(data.result === "failure"){
+        this.result.stderr = "exit code: " + data.exit_code + '\n' + data.stderr
+        this.result.result = false;
+      }else{
+        this.result.stderr = data.stderr;
+        this.result.result = true;
+      }
+    }
+    console.log(this.result);
+  }
+
+  
 }

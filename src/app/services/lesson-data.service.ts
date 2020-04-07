@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { HTTP } from '@ionic-native/http/ngx/'; // mobile
 
 // Handles data state and storage
@@ -39,17 +38,6 @@ export class LessonDataService {
     }
 
     private content: any;
-    
-    /*
-    public getSelectedContent() {
-        // fix pls wtf is this code lol and what do i do with it
-        this.content = this.httpClient
-            .request('../assets/content/text/' + this.selectedData.id + '.txt')
-            .pipe(
-                map(res => res.toString()) 
-            );
-    }
-    */
     
     public getSelectedContent(){
         return this.http.get('../assets/content/text/' + this.selectedData.id + '.txt',{responseType:'text'})

@@ -40,26 +40,57 @@
 
 </form>
 
-<ion-grid *ngIf="result">
-  <ion-row> 
-    <ion-col *ngIf="result.stdout!=''">
-      <ion-card>
-        <ion-card-content>
-          <ion-label position="stacked" color="primary">StdOut</ion-label>
-          <pre>{{ result.stdout }}</pre>
-        </ion-card-content>
-      </ion-card>
-    </ion-col>
-    
-    <ion-col *ngIf="result.stderr!=''">
-      <ion-card>
-        <ion-card-content>
-          <ion-label position="stacked" color="danger">StdErr</ion-label>
+<ion-grid *ngIf="submitted || result.language != ''">
+
+  <!-- skeleton text loading-->
+  <div *ngIf="submitted" >
+    <ion-row>
+      <ion-col>
+        <ion-item color="medium"></ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col class="ion-padding custom-skeleton">
+        <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+        <ion-skeleton-text animated></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 88%"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 70%"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <!-- display content -->
+  <div *ngIf="result.language != ''">
+    <ion-row>
+      <ion-col>
+        <ion-item [color] = "(result.result) ? 'success' : 'danger'">
           <ion-text>
-            <pre>{{ result.stderr }}</pre>
+            {{ (result.result) ? 'Success!' : 'Error!' }}
           </ion-text>
-        </ion-card-content>
-      </ion-card>
-    </ion-col>
-  </ion-row>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row> 
+      <ion-col *ngIf="result.stdout!=''">
+        <ion-card>
+          <ion-card-content>
+            <ion-label position="stacked" color="primary">StdOut</ion-label>
+            <pre>{{ result.stdout }}</pre>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      
+      <ion-col *ngIf="!result.result">
+        <ion-card>
+          <ion-card-content>
+            <ion-label position="stacked" color="danger">StdErr</ion-label>
+            <ion-text>
+              <pre>{{ result.stderr }}</pre>
+            </ion-text>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </div>
 </ion-grid>
