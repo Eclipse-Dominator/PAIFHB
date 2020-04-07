@@ -11,12 +11,17 @@ export class LesscontentComponent implements OnInit {
 
     @Input() lessonID: string;
     // TODO: get content
-    content: string;
+    content;
     
     constructor(
         private dataSvce: LessonDataService
     ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.dataSvce.getSelectedContent().subscribe(
+      x => this.content = x,
+      err => this.content = err.statusText
+    )
+  }
 
 }

@@ -8,6 +8,9 @@
 </ion-header>
 
 <ion-content>
-    <ion-icon [name]=contents></ion-icon>
-    <app-lesscontent [lessonID]=id></app-lesscontent>
+    <ion-card>
+        <ion-card-header><ion-icon [name]=contents></ion-icon></ion-card-header>
+        
+        <app-lesscontent [lessonID]=id></app-lesscontent>
+    </ion-card>
 </ion-content>
