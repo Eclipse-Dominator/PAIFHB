@@ -28,9 +28,9 @@
       <ion-button expand="block" type="submit" [disabled]="editor.code_content == ''||submitted">
         
         <div *ngIf="!submitted">
-          Run and Compile
+          Compile and Run
         </div>
-        
+
         <ion-spinner name="crescent" *ngIf="submitted"></ion-spinner>
       </ion-button>
     </ion-card-content>
