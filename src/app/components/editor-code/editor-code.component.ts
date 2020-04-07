@@ -37,11 +37,11 @@ export class EditorCodeComponent implements OnInit {
 
     this.cApi.compile_code(this.editor.code_content,tmp_input,this.editor.compiler)
     .then((data:any) => {
-      this.cApi.continued_query(data.id,5).then((result) =>{
-        console.log(result);
-        this.result = result;
-        this.submitted = false;
-      });
+      return this.cApi.continued_query(data.id,5);
+    }).then((result) => {
+      console.log(result);
+      this.result = result;
+      this.submitted = false;
     })
     .catch((error) => {
       console.log(error);
