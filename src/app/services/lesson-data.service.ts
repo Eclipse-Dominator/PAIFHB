@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { HTTP } from '@ionic-native/http/ngx/'; // mobile
+import { HttpClient } from '@angular/common/http'; 
+//import { HTTP } from '@ionic-native/http/ngx/'; // mobile
 
 // Handles data state and storage
 

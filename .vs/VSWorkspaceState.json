@@ -3,14 +3,14 @@
     "",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\lesscontent",
-    "\\src\\app\\lesson",
-    "\\src\\app\\services",
-    "\\src\\app\\tab3",
+    "\\src\\app\\components",
+    "\\src\\app\\components\\editor-code",
+    "\\src\\app\\components\\lesscontent",
     "\\src\\assets",
     "\\src\\assets\\content",
+    "\\src\\assets\\content\\images",
     "\\src\\assets\\content\\text"
   ],
-  "SelectedNode": "\\src\\assets\\content\\text\\forloops.txt",
+  "SelectedNode": "\\src\\app\\components\\lesscontent\\lesscontent.component.ts",
   "PreviewInSolutionExplorer": false
 }
