@@ -25,6 +25,7 @@ export class LessonPage implements OnInit {
         this.lesson = this.dataSvce.getSelected();
         this.contents = this.lesson.icon;
         this.title = this.lesson.title;
+        this.id = this.lesson.id;
     }
 
 }
