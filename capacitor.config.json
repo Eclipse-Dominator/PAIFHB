@@ -1,11 +1,1 @@
-{
-  "appId": "io.ionic.starter",
-  "appName": "CompetitivePAIF",
-  "bundledWebRuntime": false,
-  "npmClient": "npm",
-  "webDir": "www",
-  "cordova": {},
-  "server": {
-    "url": "http://192.168.86.26:8100"
-  }
-}
+{}
