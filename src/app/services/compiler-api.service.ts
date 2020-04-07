@@ -120,7 +120,7 @@ export class CompilerApiService {
 
   async continued_query(id:string,tries:number){
     let result:any;
-    while (--tries > 0){
+    while (tries-- > 0){
       console.log(tries);
       result = await this.check_completion(id)
       if (result.status == "completed") {
