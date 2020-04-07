@@ -18,7 +18,7 @@ export class EditorCodeComponent implements OnInit {
     private loadingCtrl: LoadingController
   ) { }
 
-  ngOnInit() { 
+  ngOnInit() {  
     this.editor={
       add_input: false,
       code_input: "",

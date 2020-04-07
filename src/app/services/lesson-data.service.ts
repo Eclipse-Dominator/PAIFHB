@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+//import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 // Handles data state and storage
 
@@ -38,15 +38,16 @@ export class LessonDataService {
     }
 
     private content: any;
-
+    /*
     public getSelectedContent() {
-        // fix pls
+        // fix pls wtf is this code lol and what do i do with it
         this.content = this.httpClient
             .get('../assets/content/text/' + this.selectedData.id + '.txt')
             .pipe(
-                map(res => res.text())
+                map(res => res.toString()) 
             );
     }
+    */
 
     private selectedData: LessonItem; // controls state of lesson page
 
@@ -80,6 +81,6 @@ export class LessonDataService {
         }
     ];
     constructor(
-        private httpClient: HttpClient
+        //private httpClient: HttpClient
     ) { }
 }

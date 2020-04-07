@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { LessonDataService, LessonData, LessonItem } from '../services/lesson-data.service';
-import { LesscontentComponent } from '../lesscontent/lesscontent.component';
+import { LesscontentComponent } from '../components/lesscontent/lesscontent.component';
 import { Content } from '@angular/compiler/src/render3/r3_ast';
 
 @Component({
@@ -14,6 +14,7 @@ export class LessonPage implements OnInit {
     lesson: LessonItem;
     contents: string;
     title: string;
+    id: string;
 
     constructor(
         private dataSvce: LessonDataService
