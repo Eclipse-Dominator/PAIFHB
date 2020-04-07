@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Tab1Page } from './tab1.page';
 import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
-import { EditorCodeComponent } from '../../components/editor-code/editor-code.component';
+
 
 @NgModule({
   imports: [
@@ -15,6 +15,6 @@ import { EditorCodeComponent } from '../../components/editor-code/editor-code.co
     ExploreContainerComponentModule,
     RouterModule.forChild([{ path: '', component: Tab1Page }])
   ],
-  declarations: [Tab1Page,EditorCodeComponent]
+  declarations: [Tab1Page]
 })
 export class Tab1PageModule {}

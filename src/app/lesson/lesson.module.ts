@@ -8,6 +8,8 @@ import { LessonPageRoutingModule } from './lesson-routing.module';
 
 import { LessonPage } from './lesson.page';
 
+import { LesscontentComponent } from '../components/lesscontent/lesscontent.component';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -15,6 +17,6 @@ import { LessonPage } from './lesson.page';
     IonicModule,
     LessonPageRoutingModule
   ],
-  declarations: [LessonPage]
+  declarations: [LessonPage,LesscontentComponent]
 })
 export class LessonPageModule {}
