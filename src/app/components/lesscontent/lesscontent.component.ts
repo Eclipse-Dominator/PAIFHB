@@ -15,10 +15,9 @@ export class LesscontentComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    this.dataSvce.getSelectedContent().subscribe(
-      x => this.content = x,
-      err => this.content = "not found"
-    )
+    this.dataSvce.getSelectedContent()
+    .then(x => this.content = x)
+    .catch(err => this.content = "not found")
   }
 
 }
