@@ -1,0 +1,34 @@
+--[input]--
+3
+1 2
+3 4
+5 12
+--[cpp]--
+#include <cstdio>
+
+using namespace std;
+
+int main(){
+ // suppose total case T 
+ // taking a,b in each case wanting result c
+ int T,a,b;  
+
+ scanf("%d",&T);
+ while(T--){
+  scanf("%d %d",&a,&b);
+  // do something with a and b
+  printf("%d\n",a + b);
+ }
+
+}
+--[python]--
+T = int(input())
+i = 0
+
+while i<T:
+ i+=1
+ user_input_list = input().split(" ")
+ a = int(user_input_list[0])
+ b = int(user_input_list[1])
+ print(a+b)
+

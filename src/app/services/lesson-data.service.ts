@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'; 
+import data from '../../assets/content/lesson_data.json';
 //import { HTTP } from '@ionic-native/http/ngx/'; // mobile
 
 // Handles data state and storage
@@ -23,9 +24,13 @@ export interface LessonItem {
 @Injectable({
   providedIn: 'root'
 })
-export class LessonDataService {
+export class LessonDataService {    
+
+    private rawData:LessonData[] = data;
+
 
     public getAllData():LessonData[] {
+        console.log(this.rawData);
         return this.rawData;
     }
 
@@ -40,41 +45,17 @@ export class LessonDataService {
     private content: any;
     
     public getSelectedContent(){
-        return this.http.get('../assets/content/text/' + this.selectedData.id + '.txt',{responseType:'text'})
+        let url = '../assets/content/text/' + this.selectedData.id + '.txt';
+        return this.readFile(url);
+    }
+
+    private readFile(url:string){
+        return this.http.get('url',{responseType:'text'}).toPromise();
     }
     
 
     private selectedData: LessonItem; // controls state of lesson page
 
-    private rawData: LessonData[] = [
-        {
-            data: [
-                {
-                    title: "For Loop",
-                    icon: "globe-outline",
-                    id: "forloops"
-                }, {
-                    title: "While Loop",
-                    icon: "globe-outline",
-                    id: "whileloops"
-                },
-            ],
-            category: "Loops"
-        }, {
-            data: [
-                {
-                    title: "S1",
-                    icon: "globe-outline",
-                    id: "2"
-                }, {
-                    title: "S2",
-                    icon: "globe-outline",
-                    id: "3"
-                },
-            ],
-            category: "ASS"
-        }
-    ];
     constructor(
         private http: HttpClient
     ) { }
