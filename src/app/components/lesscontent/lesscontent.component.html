@@ -1,15 +1,40 @@
-<ion-slides pager="true">
-  <ion-slide>
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>
+<ion-slides pager="true" [options]="slideOpts">
 
-        </ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        
-      </ion-card-content>
-    </ion-card>
+  <ion-slide *ngFor="let slide of slides" class="class-container">
+
+    <div [ngSwitch]="element.type" *ngFor="let element of slide.content">
+
+      <h1 *ngSwitchCase="'title'">{{ element.content }}</h1>
+      <ion-img [src]="element.link" *ngSwitchCase="'img'"></ion-img>
+      <ion-button *ngSwitchCase="'try'">Try it out!</ion-button>
+      <ion-button *ngSwitchCase="'quiz'">Quiz!</ion-button>
+      <p *ngSwitchCase="'p'">{{ element.content }}</p>
+      <br *ngSwitchDefault/>
+
+    </div>
+
   </ion-slide>
-</ion-slides>
 
+
+  
+<!-- LOADING SCREEN -->
+  <ion-slide *ngIf="!loaded">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item color="medium"></ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col class="ion-padding custom-skeleton">
+          <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          <ion-skeleton-text animated></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 88%"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 70%"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-slide>
+
+</ion-slides>

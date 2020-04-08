@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-import { LessonDataService, LessonData, LessonItem } from '../../services/lesson-data.service';
+import { LessonDataService, RawSlide } from '../../services/lesson-data.service';
 
 @Component({
   selector: 'app-lesscontent',
@@ -8,17 +8,30 @@ import { LessonDataService, LessonData, LessonItem } from '../../services/lesson
   styleUrls: ['./lesscontent.component.scss'],
 })
 export class LesscontentComponent implements OnInit {
-    content: string;
-    content1:string = "<ion-card>joke on u</ion-card>"
+  slides:RawSlide[] = [];
+  loaded:boolean = false;
+  constructor(
+      private dataSvce: LessonDataService
+  ) { }
 
-    constructor(
-        private dataSvce: LessonDataService
-    ) { }
+  slideOpts = {
+    initialSlide: 0,
+    speed: 400
+  };
 
   ngOnInit() {
-    this.dataSvce.getSelectedContent()
-    .then(x => this.content = x)
-    .catch(err => this.content = "not found")
+    this.loaded = false;
+    (async () => {
+      console.log("running")
+      let content_generator = this.dataSvce.getSelectedContent()
+      for await (let slide of content_generator){
+        this.slides.push(slide)
+      }
+      console.log(this.slides)
+      console.log(content_generator);
+      this.loaded = true;
+    })() 
+    
   }
 
 }
