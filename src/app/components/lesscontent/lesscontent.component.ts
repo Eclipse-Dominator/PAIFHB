@@ -9,7 +9,7 @@ import { LessonDataService, LessonData, LessonItem } from '../../services/lesson
 })
 export class LesscontentComponent implements OnInit {
     content: string;
-    
+    content1:string = "<ion-card>joke on u</ion-card>"
     constructor(
         private dataSvce: LessonDataService
     ) { }
