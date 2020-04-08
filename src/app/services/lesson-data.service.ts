@@ -54,7 +54,7 @@ export class LessonDataService {
         return this.selectedData;
     }
     
-    public async *getSelectedContent():AsyncGenerator<RawSlide,string,void>{
+    public async *getSelectedContent(){
         let url = '../assets/content/' + this.selectedData.id + '/content.txt';
 
         let content:string[] = (await this.readFile(url)).split('\n');
@@ -114,7 +114,7 @@ export class LessonDataService {
                 style: ""
             };
         }
-        return "completed";
+        return ;
     }
 
     private readFile(url:string){
