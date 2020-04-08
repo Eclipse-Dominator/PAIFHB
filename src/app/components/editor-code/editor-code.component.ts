@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CompilerApiService, Response, FilteredResponse } from '../../services/compiler-api.service';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, IonSlides } from '@ionic/angular';
 
 
 @Component({
@@ -32,7 +32,8 @@ export class EditorCodeComponent implements OnInit {
       compiler: "python3",
       code_content: ""
     };
-  }
+    }
+    @ViewChild('slidesTag', { static: false }) slidesTag: IonSlides;
 
   onSubmit():void {
     //console.log(this.editor);
@@ -44,6 +45,7 @@ export class EditorCodeComponent implements OnInit {
 
     this.cApi.compile_code(this.editor.code_content,tmp_input,this.editor.compiler)
     .then((data:any) => {
+      this.slidesTag.slideNext();
       return this.cApi.continued_query(data.id,5);
     }).then((result) => {
       console.log(result);

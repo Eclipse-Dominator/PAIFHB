@@ -3,16 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import data from '../../assets/content/lesson_data.json';
 //import { HTTP } from '@ionic-native/http/ngx/'; // mobile
 
-// Handles data state and storage
+// Handles data state
 
-export interface LessonData { // TODO: more comprehensive data
+export interface LessonData {
     data: LessonItem[];
     category: string;
 }
-
-// basics:LessonData  l1:LessonItem l2 l3
-// intermed l1 l2 l3
-// 
 
 export interface LessonItem {
     title: string;
@@ -38,8 +34,47 @@ export interface RawSlide {
 })
 export class LessonDataService {    
 
-    private rawData:LessonData[] = data;
+    private rawData: LessonData[] = data;
 
+    private selectedData: LessonItem; // controls state of lesson page
+
+    // for quiz and try
+    private defaultStdin: string = '';
+    private defaultCode: string[] = ['','',''];
+    private questionText: string;
+
+    public getStdin(): string {
+        return this.defaultStdin;
+    }
+
+    public getCode(): string[] {
+        return this.defaultCode;
+    }
+
+    public getQuiz(): string {
+        return this.questionText;
+    }
+
+    public async parseTryTxt(link) {
+        let url = '../assets/content/' + this.selectedData.id + '/' + link + '.txt';
+
+        let rawText: string[] = (await this.readFile(url)).split('\n');
+
+        // reset values to prevent accumulation
+        this.defaultStdin = '';
+        this.defaultCode = ['', '', ''];
+
+        let mode = -1; // 0 - input, 1 - c++, 2 - python, 3 - c
+
+        for (let line in rawText) {
+            if (line.slice(0, 2) == "--") {
+                mode++;
+                continue;
+            }
+            if (mode == 0) this.defaultStdin += line + "\n";
+            else this.defaultCode[mode - 1] += line + "\n";
+        }
+    }
 
     public getAllData():LessonData[] {
         console.log(this.rawData);
@@ -59,6 +94,7 @@ export class LessonDataService {
 
         let content:string[] = (await this.readFile(url)).split('\n');
         let i = -1;
+        let j = 0;
 
         let current_page:RawSlide = { content: []};
 
@@ -86,12 +122,20 @@ export class LessonDataService {
                     break;
 
                 case "<-- try -->":
-                    slide_element.link=content[++i];
+                    slide_element.link = content[++i];
+                    for (j = 10; j < slide_element.link.length; j++)
+                        if (slide_element.link[j] == ' ') break;
+                    slide_element.link = slide_element.link.slice(4, j);
+                    //console.log(slide_element.link);
                     slide_element.type="try";
                     break;
 
                 case "<-- quiz -->":
-                    slide_element.link=content[++i];
+                    slide_element.link = content[++i];
+                    for (j = 11; j < slide_element.link.length; j++)
+                        if (slide_element.link[j] == ' ') break;
+                    slide_element.link = slide_element.link.slice(4, j);
+                    //console.log(slide_element.link);
                     slide_element.type="quiz";
                     break; 
                 case "<-- image -->":
@@ -120,9 +164,6 @@ export class LessonDataService {
     private readFile(url:string){
         return this.http.get(url,{responseType:'text'}).toPromise();
     }
-    
-
-    private selectedData: LessonItem; // controls state of lesson page
 
     constructor(
         private http: HttpClient

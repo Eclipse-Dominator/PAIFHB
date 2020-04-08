@@ -6,8 +6,8 @@
 
       <h1 *ngSwitchCase="'title'">{{ element.content }}</h1>
       <ion-img [src]="element.link" *ngSwitchCase="'img'"></ion-img>
-      <ion-button *ngSwitchCase="'try'">Try it out!</ion-button>
-      <ion-button *ngSwitchCase="'quiz'">Quiz!</ion-button>
+      <ion-button (click)="codeNav(element.link, element.type)" *ngSwitchCase="'try'">Try it out!</ion-button>
+      <ion-button (click)="codeNav(element.link, element.type)" *ngSwitchCase="'quiz'">Quiz!</ion-button>
       <p *ngSwitchCase="'p'">{{ element.content }}</p>
       <br *ngSwitchDefault/>
 

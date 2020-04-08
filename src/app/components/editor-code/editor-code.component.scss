@@ -5,3 +5,16 @@
 .custom-skeleton ion-skeleton-text:last-child {
   margin-bottom: 5px;
 }
+
+ion-slides {
+  height: 100%;
+  //display: block; 
+}
+
+.class-container {
+  overflow-y: scroll;
+}
+
+.swiper-slide {
+  display: block;
+}

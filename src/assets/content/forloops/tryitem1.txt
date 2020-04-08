@@ -31,4 +31,3 @@ while i<T:
  a = int(user_input_list[0])
  b = int(user_input_list[1])
  print(a+b)
-

@@ -17,7 +17,15 @@ export class LesscontentComponent implements OnInit {
   slideOpts = {
     initialSlide: 0,
     speed: 400
-  };
+    };
+
+    codeNav(link: string, type: string): void {
+        if (type == "quiz") {
+            // TODO: fuck
+        }
+        else if (type == "try") {
+        }
+    }
 
   ngOnInit() {
     this.loaded = false;
