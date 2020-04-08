@@ -45,33 +45,72 @@ export class LessonDataService {
     return this.defaultStdin;
   }
 
-  public getCode(): string[] {
-    return this.defaultCode;
+  public async getDemo(url: string): Promise<any> {
+    let file_url: string = "../assets/content/" + url;
+    let rawCode: string = await this.readFile(file_url);
+    console.log(this.parseCodeTxt(rawCode));
+    console.log(JSON.parse(this.parseCodeTxt(rawCode)));
   }
 
   public getQuiz(): string {
     return this.questionText;
   }
+  public escapeJson(faulty_json: string): string {
+    /*
+        json escapes. 
+        newline -> \n        /\n/ => '\n'
+        Tab -> \t            /\t/ => '\t'
+        Double Quote ->\"    /\"/ => '\"'
+        \ -> \\              /\\/ => '\\'
+                             /\f/ => '\f'
+                             /\r/ => '\r'
+                             [\b] => '\b'
+      */
 
-  public async parseTryTxt(link) {
-    let url = "../assets/content/" + this.selectedData.id + "/" + link + ".txt";
+    return faulty_json
+      .trim()
+      .replace(/\\/g, "\\\\")
+      .replace(/\t/g, "\\t")
+      .replace(/\"/g, '\\"')
+      .replace(/\f/g, "\\f")
+      .replace(/\r/g, "\\r")
+      .replace(/[\b]/g, "\\b")
+      .replace(/\n/g, "\\n");
+  }
 
-    let rawText: string[] = (await this.readFile(url)).split("\n");
+  public parseCodeTxt(rawString: string) {
+    let jsonArray: string[] = [];
 
-    // reset values to prevent accumulation
-    this.defaultStdin = "";
-    this.defaultCode = ["", "", ""];
+    let type_split: string = "%%%%segment-splitter>>>>>";
+    let code_split: string = "||||||||||";
 
-    let mode = -1; // 0 - input, 1 - c++, 2 - python, 3 - c
+    let jsonString: string = "";
+    let rawCodes: string[] = rawString.split(type_split);
+    let seperator: string = '"languages":[{\n"language":"';
 
-    for (let line in rawText) {
-      if (line.slice(0, 2) == "--") {
-        mode++;
+    for (let code of rawCodes) {
+      if (code.trim() == "") {
         continue;
       }
-      if (mode == 0) this.defaultStdin += line + "\n";
-      else this.defaultCode[mode - 1] += line + "\n";
+
+      let code_grp: string[] = code.split(code_split);
+      code_grp[1] = this.escapeJson(code_grp[1]);
+      if (
+        code_grp[0] == "input" ||
+        code_grp[0] == "quiz_output" ||
+        code_grp[0] == "quiz_input"
+      ) {
+        jsonArray.push('"' + code_grp[0].trim() + '":"' + code_grp[1] + '"');
+      } else {
+        jsonString += seperator + code_grp[0].trim() + '","code":"';
+        jsonString += code_grp[1] + '"\n}';
+        seperator = ',{\n"language":"';
+      }
     }
+
+    jsonString += "]";
+    jsonArray.push(jsonString);
+    return "{\n" + jsonArray.join(",") + "\n}";
   }
 
   public getAllData(): LessonData[] {
@@ -88,9 +127,16 @@ export class LessonDataService {
   }
 
   public async *getSelectedContent() {
-    let url = "../assets/content/" + this.selectedData.id + "/content.txt";
+    let url = "../assets/content/" + this.selectedData.id + "/";
 
-    let content: string[] = (await this.readFile(url)).split("\n");
+    let content: string[] = (await this.readFile(url + "content")).split("\n");
+    let content_generator = this.parseData(content);
+    for await (let slide of content_generator) {
+      yield slide;
+    }
+  }
+
+  public async *parseData(content: string[]) {
     let i = -1;
     let j = 0;
 
@@ -119,20 +165,14 @@ export class LessonDataService {
           slide_element.type = "title";
           break;
 
-        case "<-- try -->":
+        case "<-- demo -->":
           slide_element.link = content[++i];
-          for (j = 10; j < slide_element.link.length; j++)
-            if (slide_element.link[j] == " ") break;
-          slide_element.link = slide_element.link.slice(4, j);
           //console.log(slide_element.link);
-          slide_element.type = "try";
+          slide_element.type = "demo";
           break;
 
         case "<-- quiz -->":
           slide_element.link = content[++i];
-          for (j = 11; j < slide_element.link.length; j++)
-            if (slide_element.link[j] == " ") break;
-          slide_element.link = slide_element.link.slice(4, j);
           //console.log(slide_element.link);
           slide_element.type = "quiz";
           break;

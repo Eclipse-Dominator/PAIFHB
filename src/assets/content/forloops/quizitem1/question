@@ -1,16 +1,14 @@
-<-- card -->
-<-- cardtitle -->
+<-- title -->
 Sum of number
 Write a program that takes in 2 inputs, A and B and print the sum of the inputs
 
-<-- card -->
-<-- cardtitle -->
+<-- title -->
 Input
 First line contains total test cases, T
 Each of the next T lines will contain input A and B
 
-<-- card -->
-<-- cardtitle -->
+<-- title -->
 Output
 For each case, output the sum of A and B
 
+<-- end-page -->

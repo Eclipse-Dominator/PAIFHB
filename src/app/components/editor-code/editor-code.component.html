@@ -59,6 +59,7 @@
       </ion-card>
     </form>
   </ion-slide>
+
   <ion-slide *ngIf="submitted || result.language != ''" class="class-container">
     <ion-grid>
       <!-- skeleton text loading-->
@@ -83,7 +84,11 @@
       <div *ngIf="result.language != ''">
         <ion-row>
           <ion-col>
-            <ion-item [color]="result.result ? 'success' : 'danger'">
+            <ion-item
+              [color]="
+                result.result || result.stderr != '' ? 'success' : 'danger'
+              "
+            >
               <ion-text>
                 {{ result.result ? "Success!" : "Error!" }}
               </ion-text>
