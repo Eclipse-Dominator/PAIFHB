@@ -1,11 +1,11 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { CompilerApiService } from './compiler-api.service';
+import { CompilerApiService } from "./compiler-api.service";
 
-describe('CompilerApiService', () => {
+describe("CompilerApiService", () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
-  it('should be created', () => {
+  it("should be created", () => {
     const service: CompilerApiService = TestBed.get(CompilerApiService);
     expect(service).toBeTruthy();
   });

@@ -1,26 +1,27 @@
 [
-    {
-        "data": [
-            {
-                "title": "For Loop",
-                "icon": "globe-outline",
-                "id": "forloops"
-            }, {
-                "title": "While Loop",
-                "icon": "globe-outline",
-                "id": "whileloops"
-            }
-        ],
-        "category": "Loops"
-    },
-    {
-        "data": [
-            {
-                "title": "Recursion",
-                "icon": "globe-outline",
-                "id": "recursion"
-            }
-        ],
-        "category": "Loops"
-    }
+  {
+    "data": [
+      {
+        "title": "For Loop",
+        "icon": "globe-outline",
+        "id": "forloops"
+      },
+      {
+        "title": "While Loop",
+        "icon": "globe-outline",
+        "id": "whileloops"
+      }
+    ],
+    "category": "Loops"
+  },
+  {
+    "data": [
+      {
+        "title": "Recursion",
+        "icon": "globe-outline",
+        "id": "recursion"
+      }
+    ],
+    "category": "Loops"
+  }
 ]
