@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { NavController } from "@ionic/angular";
 
 import {
@@ -12,7 +12,7 @@ import {
   templateUrl: "./lesson-selector.page.html",
   styleUrls: ["./lesson-selector.page.scss"],
 })
-export class LessonSelectorPage {
+export class LessonSelectorPage implements OnInit {
   Title: string = "PAIF Handbook";
 
   constructor(
@@ -20,7 +20,11 @@ export class LessonSelectorPage {
     private dataSvce: LessonDataService
   ) {}
 
-  GridData: LessonData[] = this.dataSvce.getAllData();
+  GridData: LessonData[] = [];
+
+  ngOnInit() {
+    this.GridData = this.dataSvce.getAllLessonData();
+  }
 
   lessonNav(lesson: LessonItem): void {
     // console.log(lesson.id);

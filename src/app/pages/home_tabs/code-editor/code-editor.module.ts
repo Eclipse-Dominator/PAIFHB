@@ -18,5 +18,6 @@ import { EditorCodeComponent } from "../../../components/editor-code/editor-code
     CodeEditorPageRoutingModule,
   ],
   declarations: [CodeEditorPage, EditorCodeComponent],
+  exports: [EditorCodeComponent],
 })
 export class CodeEditorPageModule {}

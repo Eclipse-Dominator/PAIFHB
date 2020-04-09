@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ title }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-slides [options]="slideOpts" #ionslides>
+    <ion-slide>
+      <app-lesscontent (emitDemo)="demo($event)"> </app-lesscontent>
+    </ion-slide>
+    <ion-slide>
+      <app-editor-code [defaultEditorInput]="editorInputOptions" #code_editor>
+      </app-editor-code>
+    </ion-slide>
+  </ion-slides>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="light" (click)="toggleCode()">
+      <ion-icon name="code-slash-outline" *ngIf="!is_on_code"></ion-icon>
+      <ion-icon name="book" *ngIf="is_on_code"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

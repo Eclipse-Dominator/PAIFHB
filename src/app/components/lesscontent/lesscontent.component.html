@@ -1,4 +1,4 @@
-<ion-slides pager="true" [options]="slideOpts">
+<ion-slides [options]="slideOpts">
   <ion-slide *ngFor="let slide of slides" class="class-container">
     <div [ngSwitch]="element.type" *ngFor="let element of slide.content">
       <h1 *ngSwitchCase="'title'">{{ element.content }}</h1>

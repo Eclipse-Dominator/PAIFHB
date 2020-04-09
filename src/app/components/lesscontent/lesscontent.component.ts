@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from "@angular/core";
-
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { NavController } from "@ionic/angular";
 import {
   LessonDataService,
   RawSlide,
@@ -13,19 +13,27 @@ import {
 export class LesscontentComponent implements OnInit {
   slides: RawSlide[] = [];
   loaded: boolean = false;
-  constructor(private dataSvce: LessonDataService) {}
+
+  @Output() emitDemo: EventEmitter<any> = new EventEmitter();
+
+  constructor(
+    private dataSvce: LessonDataService,
+    private navCtrl: NavController
+  ) {}
 
   slideOpts = {
     initialSlide: 0,
     speed: 400,
+    scrollbar: true,
   };
 
-  codeNav(url: string, type: string): void {
+  async codeNav(url: string, type: string): Promise<void> {
     let file_url = this.dataSvce.getSelected().id + "/" + url;
     if (type == "quiz") {
       // TODO: fuck
     } else if (type == "demo") {
-      this.dataSvce.getDemo(file_url).then((x) => console.log(x));
+      this.emitDemo.emit(await this.dataSvce.getDemo(file_url));
+      await this.dataSvce.getDemo(file_url); // json for editor
     }
   }
 

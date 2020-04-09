@@ -9,18 +9,6 @@ const routes: Routes = [
     component: HomeTabContainerPage,
     children: [
       {
-        path: "about-tab",
-        children: [
-          {
-            path: "",
-            loadChildren: () =>
-              import("../home_tabs/about-tab/about-tab.module").then(
-                (m) => m.AboutTabPageModule
-              ),
-          },
-        ],
-      },
-      {
         path: "code-editor",
         children: [
           {
@@ -33,7 +21,7 @@ const routes: Routes = [
         ],
       },
       {
-        path: "lessons",
+        path: "lessons-overview",
         children: [
           {
             path: "",
@@ -45,15 +33,27 @@ const routes: Routes = [
         ],
       },
       {
+        path: "lessons",
+        children: [
+          {
+            path: "",
+            loadChildren: () =>
+              import("../home_tabs/lesson/lesson.module").then(
+                (m) => m.LessonPageModule
+              ),
+          },
+        ],
+      },
+      {
         path: "",
-        redirectTo: "/home/about-tab",
+        redirectTo: "/home/lessons-overview",
         pathMatch: "full",
       },
     ],
   },
   {
     path: "",
-    redirectTo: "/home/about-tab",
+    redirectTo: "/home/lessons-overview",
     pathMatch: "full",
   },
 ];

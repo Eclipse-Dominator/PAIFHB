@@ -24,12 +24,7 @@ export class EditorCodeComponent implements OnInit {
     input: "",
     quiz_input: "",
     quiz_output: "",
-    languages: [
-      {
-        language: "python",
-        code: "#This is a demo code!\nprint('This is a demo code') ",
-      },
-    ],
+    languages: [],
   };
   @Input() quizmode = false;
   @Input() demomode = false;
@@ -77,21 +72,17 @@ export class EditorCodeComponent implements OnInit {
   }
 
   onCodeUpdate(): void {
-    console.log("codeChange");
     let search_lang: string = this.editor.compiler;
+
     for (let i in this.editorInput.languages) {
       if (this.editorInput.languages[i].language == search_lang) {
         this.editorInput.languages[i].code = this.editor.code_content;
-        console.log(
-          this.editorInput.languages[i].code,
-          this.templates[i].code,
-          this.editorInput.languages[i].code != this.templates[i].code
-        );
         if (this.editorInput.languages[i].code != this.templates[i].code) {
           this.editorInput.languages[i].language =
             this.templates[i].language + "  📝";
           this.editor.compiler = this.editorInput.languages[i].language;
         }
+
         return;
       }
     }
