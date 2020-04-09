@@ -4,30 +4,34 @@ import {
   Response,
   FilteredResponse,
 } from "../../services/compiler-api.service";
-import { LoadingController, IonSlides } from "@ionic/angular";
-import { PassThrough } from "stream";
+import {
+  LoadingController,
+  IonSlides,
+  IonSelect,
+  ToastController,
+} from "@ionic/angular";
+import { EditorInputs, Language } from "../../services/lesson-data.service";
 
 @Component({
   selector: "app-editor-code",
   templateUrl: "./editor-code.component.html",
   styleUrls: ["./editor-code.component.scss"],
 })
-export interface EditorOptions {
-  Page_Usage: string;
-  quiz_mode: boolean;
-  demo_url: string;
-  quiz_folder: string;
-}
-
 export class EditorCodeComponent implements OnInit {
-  @Input() editor_options: EditorOptions = {
-    Page_Usage: "default",
-    quiz_mode: false,
-    demo_url: "",
-    quiz_folder: "",
-  };
+  @ViewChild("ionSelect", { static: false }) ionSelect: IonSelect;
 
+  @Input() defaultEditorInput: EditorInputs = {
+    input: "",
+    quiz_input: "",
+    quiz_output: "",
+    languages: [],
+  };
+  @Input() quizmode = false;
+  @Input() demomode = false;
+
+  editorInput: EditorInputs;
   submitted: boolean = false;
+
   result: FilteredResponse = {
     language: "",
     stdout: "",
@@ -37,28 +41,65 @@ export class EditorCodeComponent implements OnInit {
   };
   editor;
 
+  onSelectChange(): void {
+    let search_lang: string = this.editor.compiler;
+    for (let language of this.editorInput.languages) {
+      console.log(language.language, search_lang);
+      if (language.language == search_lang) {
+        console.log("found");
+        this.editor.code_content = language.code;
+        return;
+      }
+    }
+    if (this.quizmode || this.demomode)
+      this.presentToast("No demo code available! :(");
+    this.editorInput.languages.push({
+      language: search_lang,
+      code: "",
+    });
+    this.editor.code_content = "";
+    console.log(this.editorInput);
+  }
+
+  onCodeUpdate(): void {
+    console.log("codeChange");
+    let search_lang: string = this.editor.compiler;
+    for (let language of this.editorInput.languages) {
+      if (language.language == search_lang) {
+        language.code = this.editor.code_content;
+        return;
+      }
+    }
+    this.presentToast("No such language found");
+  }
+
+  async presentToast(msg: string): Promise<void> {
+    const toast = await this.toastCtrl.create({
+      message: msg,
+      duration: 2000,
+    });
+    toast.present();
+  }
+
   constructor(
     private cApi: CompilerApiService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private toastCtrl: ToastController
   ) {}
 
   ngOnInit() {
-    switch (this.editor_options.Page_Usage) {
-      case "quiz":
-        console.log("quiz");
-        break;
-      case "demo":
-        console.log("demo");
-        break;
-      default:
-        break;
-    }
+    this.editorInput = { ...this.defaultEditorInput };
+    this.editorInput.languages = [...this.defaultEditorInput.languages];
     this.editor = {
-      add_input: false,
-      code_input: "",
-      compiler: "python3",
+      add_input: this.editorInput.input == "" ? false : true,
+      code_input: this.editorInput.input,
+      compiler:
+        this.editorInput.languages.length > 0
+          ? this.editorInput.languages[0].language
+          : "python3",
       code_content: "",
     };
+    this.onSelectChange();
   }
   @ViewChild("slidesTag", { static: false }) slidesTag: IonSlides;
 

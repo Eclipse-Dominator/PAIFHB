@@ -1,4 +1,27 @@
-[cpp]
+%%%%segment-splitter>>>>>quiz_input||||||||||
+10
+1 2
+3 4
+5 61
+1 44
+124 1243
+14 4
+4 41
+112 233
+12444 1212
+112 1
+%%%%segment-splitter>>>>>quiz_output||||||||||
+3
+7
+66
+45
+1367
+18
+45
+345
+13656
+113
+%%%%segment-splitter>>>>>cpp||||||||||
 #include <cstdio>
 
 using namespace std;

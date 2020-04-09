@@ -25,7 +25,9 @@ export class LesscontentComponent implements OnInit {
     if (type == "quiz") {
       // TODO: fuck
     } else if (type == "demo") {
-      this.dataSvce.getDemo(file_url).then(() => console.log("success"));
+      this.dataSvce
+        .getDemo(file_url)
+        .then((x) => console.log(JSON.stringify(x)));
     }
   }
 

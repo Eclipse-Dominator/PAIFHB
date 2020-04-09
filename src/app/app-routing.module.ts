@@ -12,6 +12,13 @@ const routes: Routes = [
     loadChildren: () =>
       import("./lesson/lesson.module").then((m) => m.LessonPageModule),
   },
+  {
+    path: "home",
+    loadChildren: () =>
+      import("./pages/home-tab-page/home-tab-page.module").then(
+        (m) => m.HomeTabPagePageModule
+      ),
+  },
 ];
 @NgModule({
   imports: [

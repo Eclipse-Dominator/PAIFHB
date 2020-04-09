@@ -9,6 +9,8 @@
             interface="action-sheet"
             [(ngModel)]="editor.compiler"
             name="code_compiler"
+            (ionChange)="onSelectChange()"
+            #ionSelect
           >
             <ion-select-option value="python3">Python 3</ion-select-option>
             <ion-select-option value="cpp">C++</ion-select-option>
@@ -23,6 +25,7 @@
             rows="12"
             [(ngModel)]="editor.code_content"
             name="code_content"
+            (ionBlur)="onCodeUpdate()"
             required
           ></ion-textarea>
         </ion-item>
@@ -44,17 +47,32 @@
           ></ion-textarea>
         </ion-item>
         <ion-card-content>
-          <ion-button
-            expand="block"
-            type="submit"
-            [disabled]="editor.code_content == '' || submitted"
-          >
-            <div *ngIf="!submitted">
-              Compile and Run
-            </div>
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-button
+                  expand="block"
+                  type="submit"
+                  [disabled]="editor.code_content == '' || submitted"
+                >
+                  <div *ngIf="!submitted">
+                    Compile and Run
+                  </div>
 
-            <ion-spinner name="crescent" *ngIf="submitted"></ion-spinner>
-          </ion-button>
+                  <ion-spinner name="crescent" *ngIf="submitted"></ion-spinner>
+                </ion-button>
+              </ion-col>
+              <ion-col size="3" size-md="2" size-lg="1">
+                <ion-button
+                  expand="block"
+                  (click)="ngOnInit()"
+                  [disabled]="submitted"
+                >
+                  <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
         </ion-card-content>
       </ion-card>
     </form>
@@ -86,7 +104,7 @@
           <ion-col>
             <ion-item
               [color]="
-                result.result || result.stderr != '' ? 'success' : 'danger'
+                result.result || result.stderr == '' ? 'success' : 'danger'
               "
             >
               <ion-text>

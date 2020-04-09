@@ -21,7 +21,7 @@ int main(){
  }
 
 }
-%%%%segment-splitter>>>>>python||||||||||
+%%%%segment-splitter>>>>>python3||||||||||
 T = int(input())
 i = 0
 
@@ -31,5 +31,3 @@ while i<T:
  a = int(user_input_list[0])
  b = int(user_input_list[1])
  print(a+b)
-%%%%segment-splitter>>>>>c||||||||||
-// No demo case :(
