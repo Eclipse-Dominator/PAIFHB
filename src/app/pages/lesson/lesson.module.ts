@@ -8,7 +8,7 @@ import { LessonPageRoutingModule } from "./lesson-routing.module";
 
 import { LessonPage } from "./lesson.page";
 
-import { LesscontentComponent } from "../components/lesscontent/lesscontent.component";
+import { LesscontentComponent } from "../../components/lesscontent/lesscontent.component";
 
 @NgModule({
   imports: [CommonModule, FormsModule, IonicModule, LessonPageRoutingModule],

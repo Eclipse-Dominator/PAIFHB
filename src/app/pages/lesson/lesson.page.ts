@@ -4,8 +4,8 @@ import {
   LessonDataService,
   LessonData,
   LessonItem,
-} from "../services/lesson-data.service";
-import { LesscontentComponent } from "../components/lesscontent/lesscontent.component";
+} from "../../services/lesson-data.service";
+import { LesscontentComponent } from "../../components/lesscontent/lesscontent.component";
 import { Content } from "@angular/compiler/src/render3/r3_ast";
 
 @Component({
