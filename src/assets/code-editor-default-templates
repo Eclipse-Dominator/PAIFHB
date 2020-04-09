@@ -1,0 +1,83 @@
+%%%%segment-splitter>>>>>c||||||||||
+#include <stdio.h>
+
+int main(void) {
+	// your code goes here
+	return 0;
+}
+%%%%segment-splitter>>>>>cpp||||||||||
+#include <iostream>
+using namespace std;
+
+int main() {
+	// your code goes here
+	return 0;
+}
+%%%%segment-splitter>>>>>objective-c||||||||||
+#import <objc/objc.h>
+#import <objc/Object.h>
+#import <Foundation/Foundation.h>
+
+@implementation TestObj
+int main()
+{
+	// your code goes here
+	return 0;
+}
+@end
+%%%%segment-splitter>>>>>java||||||||||
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+class Main
+{
+	public static void main (String[] args) throws java.lang.Exception
+	{
+		// your code goes here
+	}
+}
+%%%%segment-splitter>>>>>swift||||||||||
+// we read standard input line by line
+while let line = readLine() {
+	// we write the line to the standard output
+	print(line)
+}
+%%%%segment-splitter>>>>>csharp||||||||||
+using System;
+
+public class Test
+{
+	public static void Main()
+	{
+		// your code goes here
+	}
+}
+%%%%segment-splitter>>>>>haskell||||||||||
+main = -- your code goes here
+%%%%segment-splitter>>>>>pearl||||||||||
+#!/usr/bin/perl
+# your code goes here
+%%%%segment-splitter>>>>>python||||||||||
+# your code goes here 
+%%%%segment-splitter>>>>>python3||||||||||
+# your code goes here
+%%%%segment-splitter>>>>>ruby||||||||||
+# your code goes here
+%%%%segment-splitter>>>>>php||||||||||
+<?php
+
+// your code goes here
+%%%%segment-splitter>>>>>bash||||||||||
+#!/bin/bash
+# your code goes here
+%%%%segment-splitter>>>>>vb||||||||||
+Imports System
+
+Public Class Test
+	Public Shared Sub Main()
+		' your code goes here
+	End Sub
+End Class
+%%%%segment-splitter>>>>>mysql||||||||||
+-- your code goes here

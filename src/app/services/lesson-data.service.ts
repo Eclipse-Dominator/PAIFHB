@@ -50,6 +50,14 @@ export class LessonDataService {
 
   private selectedData: LessonItem; // controls state of lesson page
 
+  public async getCodeTemplates(): Promise<EditorInputs> {
+    let raw_template: string = await this.readFile(
+      "../assets/code-editor-default-templates"
+    );
+
+    return this.parseCodeTxt(raw_template);
+  }
+
   public async getDemo(url: string): Promise<any> {
     let file_url: string = "../assets/content/" + url;
     let rawCode: string = await this.readFile(file_url);
@@ -83,7 +91,7 @@ export class LessonDataService {
       .replace(/\n/g, "\\n");
   }
 
-  public parseCodeTxt(rawString: string) {
+  public parseCodeTxt(rawString: string): EditorInputs {
     let jsonArray: string[] = [];
 
     let type_split: string = "%%%%segment-splitter>>>>>";
@@ -115,7 +123,13 @@ export class LessonDataService {
 
     jsonString += "]";
     jsonArray.push(jsonString);
-    return JSON.parse("{\n" + jsonArray.join(",") + "\n}");
+
+    let parsedJson: EditorInputs = JSON.parse(
+      "{\n" + jsonArray.join(",") + "\n}"
+    );
+    parsedJson.languages.sort((x) => x.language);
+
+    return parsedJson;
   }
 
   public getAllData(): LessonData[] {

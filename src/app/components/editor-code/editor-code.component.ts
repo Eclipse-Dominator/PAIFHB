@@ -24,12 +24,19 @@ export class EditorCodeComponent implements OnInit {
     input: "",
     quiz_input: "",
     quiz_output: "",
-    languages: [],
+    languages: [
+      {
+        language: "python",
+        code: "#This is a demo code!\nprint('This is a demo code') ",
+      },
+    ],
   };
   @Input() quizmode = false;
   @Input() demomode = false;
 
-  editorInput: EditorInputs;
+  templates: Language[];
+
+  editorInput: EditorInputs = { ...this.defaultEditorInput };
   submitted: boolean = false;
 
   result: FilteredResponse = {
@@ -39,15 +46,24 @@ export class EditorCodeComponent implements OnInit {
     time: "",
     result: true,
   };
-  editor;
+
+  editor = {
+    add_input: false,
+    code_input: "",
+    compiler: "",
+    code_content: "",
+  };
+
+  caps_first_word(x: string) {
+    return x[0].toUpperCase() + x.slice(1);
+  }
 
   onSelectChange(): void {
     let search_lang: string = this.editor.compiler;
-    for (let language of this.editorInput.languages) {
-      console.log(language.language, search_lang);
-      if (language.language == search_lang) {
-        console.log("found");
-        this.editor.code_content = language.code;
+    for (let i of this.editorInput.languages) {
+      if (i.language == search_lang) {
+        this.editor.code_content = i.code;
+
         return;
       }
     }
@@ -58,15 +74,24 @@ export class EditorCodeComponent implements OnInit {
       code: "",
     });
     this.editor.code_content = "";
-    console.log(this.editorInput);
   }
 
   onCodeUpdate(): void {
     console.log("codeChange");
     let search_lang: string = this.editor.compiler;
-    for (let language of this.editorInput.languages) {
-      if (language.language == search_lang) {
-        language.code = this.editor.code_content;
+    for (let i in this.editorInput.languages) {
+      if (this.editorInput.languages[i].language == search_lang) {
+        this.editorInput.languages[i].code = this.editor.code_content;
+        console.log(
+          this.editorInput.languages[i].code,
+          this.templates[i].code,
+          this.editorInput.languages[i].code != this.templates[i].code
+        );
+        if (this.editorInput.languages[i].code != this.templates[i].code) {
+          this.editorInput.languages[i].language =
+            this.templates[i].language + "  📝";
+          this.editor.compiler = this.editorInput.languages[i].language;
+        }
         return;
       }
     }
@@ -87,15 +112,46 @@ export class EditorCodeComponent implements OnInit {
     private toastCtrl: ToastController
   ) {}
 
-  ngOnInit() {
-    this.editorInput = { ...this.defaultEditorInput };
-    this.editorInput.languages = [...this.defaultEditorInput.languages];
+  async ngOnInit() {
+    try {
+      this.templates = (await this.cApi.getTemplateJSON()).languages;
+      let i = -1,
+        j = 0;
+      while (
+        ++i < this.templates.length &&
+        j < this.defaultEditorInput.languages.length
+      ) {
+        if (
+          this.templates[i].language ==
+          this.defaultEditorInput.languages[j].language
+        ) {
+          this.templates[i].language =
+            this.defaultEditorInput.languages[j].language + "  📄";
+          this.templates[i].code = this.defaultEditorInput.languages[j].code;
+          j++;
+        }
+      }
+      this.editorInput = { ...this.defaultEditorInput };
+      this.editorInput.languages = this.templates.map((x) => {
+        return { ...x };
+      });
+      this.editorInput;
+    } catch (error) {
+      this.presentToast("An error occured while loading templates!");
+      this.editorInput = { ...this.defaultEditorInput };
+      this.editorInput.languages = this.defaultEditorInput.languages.map(
+        (x) => {
+          return { ...x };
+        }
+      );
+    }
+
     this.editor = {
       add_input: this.editorInput.input == "" ? false : true,
       code_input: this.editorInput.input,
       compiler:
-        this.editorInput.languages.length > 0
-          ? this.editorInput.languages[0].language
+        this.defaultEditorInput.languages.length > 0
+          ? this.defaultEditorInput.languages[0].language + "  📄"
           : "python3",
       code_content: "",
     };
@@ -103,29 +159,37 @@ export class EditorCodeComponent implements OnInit {
   }
   @ViewChild("slidesTag", { static: false }) slidesTag: IonSlides;
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     //console.log(this.editor);
     this.result.language = "";
     let tmp_input: string = "";
     if (this.editor.add_input) tmp_input = this.editor.code_input;
 
-    this.submitted = true;
-
-    this.cApi
-      .compile_code(this.editor.code_content, tmp_input, this.editor.compiler)
-      .then((data: any) => {
-        this.slidesTag.slideNext();
-        return this.cApi.continued_query(data.id, 5);
-      })
-      .then((result) => {
-        console.log(result);
-        this.getImptData(result);
-        this.submitted = false;
-      })
-      .catch((error) => {
-        console.log(error);
-        this.submitted = false;
-      });
+    try {
+      this.submitted = true;
+      let dataID: string = (
+        await this.cApi.compile_code(
+          this.editor.code_content,
+          tmp_input,
+          this.editor.compiler.replace("📝", "").replace("📄", "").trim()
+        )
+      ).id;
+      this.slidesTag.slideNext();
+      let result_generator = this.cApi.continued_query(dataID, 5);
+      let raw_response;
+      for await (raw_response of result_generator) {
+        this.presentToast(
+          typeof raw_response == "object" ? "retrieved" : raw_response
+        );
+        //console.log(await raw_response);
+      }
+      this.getImptData(raw_response);
+      this.submitted = false;
+    } catch (error) {
+      this.presentToast(error);
+      //console.log(error);
+      this.submitted = false;
+    }
   }
 
   getImptData(data: Response): void {

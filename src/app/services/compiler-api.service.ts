@@ -1,11 +1,45 @@
 import { Injectable } from "@angular/core";
 //import { HTTP } from '@ionic-native/http/ngx/'; // mobile
 import { HttpClient } from "@angular/common/http";
+import { LessonDataService } from "./lesson-data.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class CompilerApiService {
+  compilers_lang: string[] = [
+    "c",
+    "cpp",
+    "objective-c",
+    "java",
+    //"kotlin",
+    //"scala",
+    "swift",
+    "csharp",
+    //"go",
+    "haskell",
+    //"erlang",
+    "perl",
+    "python",
+    "python3",
+    "ruby",
+    "php",
+    "bash",
+    //"r",
+    //"javascript",
+    //"coffeescript",
+    "vb",
+    //"cobol",
+    //"fsharp",
+    //"d",
+    //"clojure",
+    //"elixir",
+    "mysql",
+    //"rust",
+    //"scheme",
+    //"commonlisp",
+    //"plain",
+  ];
   apiUrl: string = "http://api.paiza.io:80";
   headers = {
     "Content-Type": "application/json",
@@ -16,10 +50,19 @@ export class CompilerApiService {
 
   constructor(
     //private http:HTTP,
+    private dataSvce: LessonDataService,
     private http: HttpClient
   ) {}
 
-  compile_code(content: string, user_input: string, compiler: string) {
+  public async getTemplateJSON() {
+    return await this.dataSvce.getCodeTemplates();
+  }
+
+  async compile_code(
+    content: string,
+    user_input: string,
+    compiler: string
+  ): Promise<IncompleteResponse> {
     let body = {
       language: compiler,
       source_code: content,
@@ -28,31 +71,9 @@ export class CompilerApiService {
     };
 
     console.log(body);
-
-    return new Promise((resolve, reject) => {
-      /*
-      this.http.post(this.apiUrl+this.post_session,body,this.headers)
-      .then((data) => {
-        console.log(data);
-        resolve(JSON.parse( data.data ));
-      })
-      .catch((error) => {
-        console.log(error);
-        reject(error);
-      })
-      */
-
-      // non native implmentation
-      this.http
-        .post<IncompleteResponse>(this.apiUrl + this.post_session, body)
-        .subscribe(
-          (data) => {
-            console.log(data);
-            resolve(data);
-          },
-          (err) => reject(err)
-        );
-    });
+    return await this.http
+      .post<IncompleteResponse>(this.apiUrl + this.post_session, body)
+      .toPromise();
   }
 
   check_completion(id: string) {
@@ -62,20 +83,6 @@ export class CompilerApiService {
     };
     let addon: string = "?id=" + id + "&api_key=guest";
     return new Promise((resolve, reject) => {
-      // native implementation
-      /*
-      this.http.get(this.apiUrl+this.get_status,body,this.headers)
-      .then((data) => {
-        //console.log(JSON.parse( data.data ));
-        resolve(JSON.parse( data.data ));
-      })
-      .catch((error) => {
-        console.log(error);
-        reject(error);
-      })
-      */
-
-      //non-native implentation
       this.http
         .get<IncompleteResponse>(this.apiUrl + this.get_status + addon)
         .subscribe(
@@ -94,16 +101,7 @@ export class CompilerApiService {
   async get_result(id: string) {
     console.log("getting result");
     let addon: string = "?id=" + id + "&api_key=guest";
-    let body = {
-      id: id,
-      api_key: "guest",
-    };
     try {
-      //native
-      //let result = await this.http.get(this.apiUrl+this.get_details,body,this.headers)
-      //return JSON.parse( result.data );
-
-      //non-native
       return await this.http
         .get<Response>(this.apiUrl + this.get_details + addon)
         .toPromise();
@@ -116,17 +114,20 @@ export class CompilerApiService {
 
   timeout = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  async continued_query(id: string, tries: number) {
+  async *continued_query(id: string, tries: number) {
     let result: any;
     while (tries-- > 0) {
       console.log(tries);
       result = await this.check_completion(id);
       if (result.status == "completed") {
-        return await this.get_result(id);
+        yield "Compiled! Retrieving data...";
+        yield await this.get_result(id);
+        return;
       }
+      yield "Not compiled! " + tries + " left...";
       await this.timeout(1000);
     }
-    return Promise.reject(new Error("Unable to connect to server!"));
+    return Promise.reject(new Error("Timed out!"));
   }
 }
 

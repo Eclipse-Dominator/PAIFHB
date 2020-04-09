@@ -5,16 +5,17 @@
         <ion-item>
           <ion-label>Compiler</ion-label>
           <ion-select
-            value="python3"
             interface="action-sheet"
             [(ngModel)]="editor.compiler"
             name="code_compiler"
             (ionChange)="onSelectChange()"
             #ionSelect
           >
-            <ion-select-option value="python3">Python 3</ion-select-option>
-            <ion-select-option value="cpp">C++</ion-select-option>
-            <ion-select-option value="c">C</ion-select-option>
+            <ion-select-option
+              *ngFor="let i of editorInput.languages"
+              [value]="i.language"
+              >{{ caps_first_word(i.language) }}
+            </ion-select-option>
           </ion-select>
         </ion-item>
 

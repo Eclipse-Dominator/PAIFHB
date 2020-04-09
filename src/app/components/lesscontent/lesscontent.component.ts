@@ -25,22 +25,30 @@ export class LesscontentComponent implements OnInit {
     if (type == "quiz") {
       // TODO: fuck
     } else if (type == "demo") {
-      this.dataSvce
-        .getDemo(file_url)
-        .then((x) => console.log(JSON.stringify(x)));
+      this.dataSvce.getDemo(file_url).then((x) => console.log(x));
     }
   }
 
   ngOnInit() {
     this.loaded = false;
     (async () => {
-      console.log("running");
       let content_generator = this.dataSvce.getSelectedContent();
-      for await (let slide of content_generator) {
-        this.slides.push(slide);
+      try {
+        for await (let slide of content_generator) {
+          this.slides.push(slide);
+        }
+      } catch (error) {
+        this.slides.push({
+          content: [
+            {
+              type: "p",
+              link: "",
+              content: "An error has occured while loading this page!",
+              style: "",
+            },
+          ],
+        });
       }
-      console.log(this.slides);
-      console.log(content_generator);
       this.loaded = true;
     })();
   }

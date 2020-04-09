@@ -13,7 +13,9 @@
         *ngSwitchCase="'quiz'"
         >Quiz!</ion-button
       >
-      <p *ngSwitchCase="'p'" class="ion-text-left">{{ element.content }}</p>
+      <p *ngSwitchCase="'p'" class="ion-text-left">
+        {{ element.content }}
+      </p>
       <br *ngSwitchDefault />
     </div>
   </ion-slide>

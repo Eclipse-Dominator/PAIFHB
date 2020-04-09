@@ -13,7 +13,7 @@ import {
   styleUrls: ["./lesson-selector.page.scss"],
 })
 export class LessonSelectorPage {
-  Title: string = "Productivity At Its Finest";
+  Title: string = "PAIF Handbook";
 
   constructor(
     private navCtrl: NavController,
