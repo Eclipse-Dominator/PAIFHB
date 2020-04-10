@@ -127,7 +127,6 @@ export class EditorCodeComponent implements OnInit {
       this.editorInput.languages = this.templates.map((x) => {
         return { ...x };
       });
-      this.editorInput;
     } catch (error) {
       this.presentToast("An error occured while loading templates!");
       this.editorInput = { ...this.defaultEditorInput };
@@ -149,6 +148,27 @@ export class EditorCodeComponent implements OnInit {
     };
     this.onSelectChange();
   }
+
+  async reset(): Promise<void> {
+    if (this.templates.length == 0) {
+      return this.ngOnInit();
+    }
+    this.editorInput = { ...this.defaultEditorInput };
+    this.editorInput.languages = this.templates.map((x) => {
+      return { ...x };
+    });
+    this.editor = {
+      add_input: this.editorInput.input == "" ? false : true,
+      code_input: this.editorInput.input,
+      compiler:
+        this.defaultEditorInput.languages.length > 0
+          ? this.defaultEditorInput.languages[0].language + "  📄"
+          : "python3",
+      code_content: "",
+    };
+    this.onSelectChange();
+  }
+
   @ViewChild("slidesTag", { static: false }) slidesTag: IonSlides;
 
   async onSubmit(): Promise<void> {
