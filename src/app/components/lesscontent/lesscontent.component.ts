@@ -15,8 +15,9 @@ export class LesscontentComponent implements OnInit {
   slides: RawSlide[] = [];
     loaded: boolean = false;
 
-    @Output() emitDemo: EventEmitter<any> = new EventEmitter();
     @Output() emitQuiz: EventEmitter<any> = new EventEmitter();
+  @Output() emitDemo: EventEmitter<any> = new EventEmitter();
+  @Output() emitProgress: EventEmitter<any> = new EventEmitter();
 
 
     constructor(
@@ -29,6 +30,7 @@ export class LesscontentComponent implements OnInit {
     initialSlide: 0,
     speed: 400,
     scrollbar: true,
+    watchSlidesProgress: true,
   };
 
   async codeNav(url: string, type: string): Promise<void> {
@@ -40,11 +42,10 @@ export class LesscontentComponent implements OnInit {
     }
   }
 
-    ngOnInit() {
+    async ngOnInit() {
 
         let quizID: string = this.route.snapshot.paramMap.get('quizfolder');
     this.loaded = false;
-        (async () => {
             let content_generator;
             if (quizID) {
                 let file_url = this.dataSvce.getSelected().id + "/" + quizID;
@@ -70,7 +71,6 @@ export class LesscontentComponent implements OnInit {
           ],
         });
       }
-      this.loaded = true;
-    })();
+    this.loaded = true;
   }
 }

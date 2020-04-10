@@ -192,7 +192,7 @@ export class LessonDataService {
       content[i] = content[i].trim();
 
       if (content[i] == "<-- end-page -->") {
-        yield { ...current_page };
+        yield { ...current_page }; // yield generated page
         current_page.content = [];
         continue;
       }

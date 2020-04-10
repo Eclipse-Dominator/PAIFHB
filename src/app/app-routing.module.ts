@@ -20,6 +20,18 @@ const routes: Routes = [
             import("./pages/lesson/lesson.module").then((m) => m.LessonPageModule),
     },
   {
+    path: "lessons",
+    children: [
+      {
+        path: "",
+        loadChildren: () =>
+          import("./pages/lesson/lesson.module").then(
+            (m) => m.LessonPageModule
+          ),
+      },
+    ],
+  },
+  {
     path: "",
     redirectTo: "home",
     pathMatch: "full",
