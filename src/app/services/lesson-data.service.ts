@@ -56,9 +56,9 @@ export class LessonDataService {
   private appState: AppState = {
     //state of app
     defaultEditorInput: undefined,
-    selectedLesson: undefined,
-    demoMode: false,
-    quizMode: false,
+      selectedLesson: undefined,
+      demoMode: false,
+      quizMode: false,
   };
 
   public async getCodeTemplates(): Promise<EditorInputs> {
@@ -72,12 +72,14 @@ export class LessonDataService {
   public async getDemo(url: string): Promise<any> {
     let file_url: string = "../assets/content/" + url;
     let rawCode: string = await this.readFile(file_url);
-    console.log(rawCode);
+    //console.log(rawCode);
     return this.parseCodeTxt(rawCode);
   }
 
-  public getQuiz(): string {
-    return "not implemented";
+  public async getQuiz(url: string): Promise<any> {
+      let default_url: string = "../assets/content/" + url + "/default.txt";
+      let rawDefault: string = await this.readFile(default_url);
+      return this.parseCodeTxt(rawDefault);
   }
 
   public escapeJson(faulty_json: string): string {
@@ -157,12 +159,22 @@ export class LessonDataService {
     return this.appState.selectedLesson;
   }
 
-  public async *getSelectedContent() {
-    let url = "../assets/content/" + this.appState.selectedLesson.id + "/";
+  public async *getSelectedContent(folder_string: string = "") {
+    // if folder_string not empty, parse question.txt instead
+    let url: string = "../assets/content/" + this.appState.selectedLesson.id + "/";
+    let content: string[];
+      if (folder_string.length > 0) {
+          url += folder_string + "/";
 
-    let content: string[] = (await this.readFile(url + "content.txt")).split(
-      "\n"
-    );
+          content = (await this.readFile(url + "question.txt")).split(
+              "\n"
+          );
+      }
+      else {
+          content = (await this.readFile(url + "content.txt")).split(
+              "\n"
+          );
+      }
     console.log(content);
     let content_generator = this.parseData(content);
     for await (let slide of content_generator) {
@@ -195,7 +207,7 @@ export class LessonDataService {
       switch (content[i]) {
         case "<-- title -->":
           slide_element.content = content[++i];
-          console.log(i);
+          //console.log(i);
           slide_element.type = "title";
           break;
 

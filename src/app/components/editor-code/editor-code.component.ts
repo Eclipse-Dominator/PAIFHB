@@ -11,6 +11,7 @@ import {
   ToastController,
 } from "@ionic/angular";
 import { EditorInputs, Language } from "../../services/lesson-data.service";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: "app-editor-code",
@@ -26,13 +27,14 @@ export class EditorCodeComponent implements OnInit {
     quiz_output: "",
     languages: [],
   };
-  @Input() quizmode = false;
+  quizmode = false;
   @Input() demomode = false;
 
   templates: Language[];
 
   editorInput: EditorInputs = { ...this.defaultEditorInput };
-  submitted: boolean = false;
+    submitted: boolean = false;
+    submittedQuiz: boolean = false;
 
   result: FilteredResponse = {
     language: "",
@@ -40,7 +42,7 @@ export class EditorCodeComponent implements OnInit {
     stderr: "",
     time: "",
     result: true,
-  };
+    };
 
   editor = {
     add_input: false,
@@ -97,13 +99,15 @@ export class EditorCodeComponent implements OnInit {
     toast.present();
   }
 
-  constructor(
+    constructor(
+        private route: ActivatedRoute,
     private cApi: CompilerApiService,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController
   ) {}
 
-  async ngOnInit() {
+    async ngOnInit() {
+        this.quizmode = this.route.snapshot.paramMap.get('quizfolder') != null;
     try {
       this.templates = (await this.cApi.getTemplateJSON()).languages;
       let i = -1,
@@ -169,16 +173,23 @@ export class EditorCodeComponent implements OnInit {
     this.onSelectChange();
   }
 
-  @ViewChild("slidesTag", { static: false }) slidesTag: IonSlides;
+    updateSubmit(quizMode: boolean, value: boolean) {
+        if (quizMode) this.submittedQuiz = value;
+        else this.submitted = value;
+    }
 
-  async onSubmit(): Promise<void> {
+  @ViewChild("slidesTag", { static: false }) slidesTag: IonSlides;
+    
+  async onSubmit(quizMode: boolean = false): Promise<void> {
     //console.log(this.editor);
     this.result.language = "";
-    let tmp_input: string = "";
-    if (this.editor.add_input) tmp_input = this.editor.code_input;
+      let qi = this.defaultEditorInput.quiz_input;
+      let ei = this.editor.add_input;
+      let tmp_input: string = (quizMode && qi) ? qi
+                            : ei ? this.editor.code_input : "";
 
     try {
-      this.submitted = true;
+        this.updateSubmit(quizMode, true);
       let dataID: string = (
         await this.cApi.compile_code(
           this.editor.code_content,
@@ -194,35 +205,53 @@ export class EditorCodeComponent implements OnInit {
           typeof raw_response == "object" ? "retrieved" : raw_response
         );
         //console.log(await raw_response);
-      }
-      this.getImptData(raw_response);
-      this.submitted = false;
+        }
+        this.getImptData(raw_response, this.result, quizMode);
+        this.updateSubmit(quizMode, false);
     } catch (error) {
       this.presentToast(error);
       //console.log(error);
-      this.submitted = false;
+        this.updateSubmit(quizMode, false);
     }
-  }
+    }
 
-  getImptData(data: Response): void {
-    this.result.language = data.language;
+    thoroughTrim(str: string) {
+        let stra: string[] = str.split('\n');
+        let i = 0;
+        for (let line of stra) {
+            stra[i++] = line.trim();
+        }
+        return stra.join('\n');
+    }
+
+  getImptData(data: Response, result: FilteredResponse, quizMode: boolean): void {
+    result.language = data.language;
 
     if (data.build_result === "failure") {
-      this.result.stderr =
+      result.stderr = quizMode ? "build error when compiling code" :
         "build exit code: " + data.build_exit_code + "\n" + data.build_stderr;
-      this.result.stdout = data.build_stdout;
-      this.result.result = false;
+      result.stdout = data.build_stdout;
+      result.result = false;
     } else {
-      this.result.stdout = data.stdout;
-      if (data.result === "failure") {
-        this.result.stderr =
-          "exit code: " + data.exit_code + "\n" + data.stderr;
-        this.result.result = false;
-      } else {
-        this.result.stderr = data.stderr;
-        this.result.result = true;
+      result.stdout = data.stdout;
+        if (data.result === "failure") {
+            result.stderr = quizMode ? "an error occurred when running the code." :
+                "exit code: " + data.exit_code + "\n" + data.stderr;
+            result.result = false;
+        } else if (quizMode) {
+            if (this.thoroughTrim(this.defaultEditorInput.quiz_output.trim()) != this.thoroughTrim(result.stdout.trim())) {
+                result.stdout = "";
+                result.stderr = "wrong answer.";
+                result.result = false;
+            } else {
+                result.stdout = "correct answer.";
+                result.result = true;
+            }
+        } else {
+        result.stderr = data.stderr;
+        result.result = true;
       }
     }
-    console.log(this.result);
+    console.log(result);
   }
 }

@@ -13,7 +13,12 @@ const routes: Routes = [
       import("./pages/home-tab-container/home-tab-container.module").then(
         (m) => m.HomeTabContainerPageModule
       ),
-  },
+    },
+    {
+        path: "quiz/:quizfolder",
+        loadChildren: () =>
+            import("./pages/lesson/lesson.module").then((m) => m.LessonPageModule),
+    },
   {
     path: "",
     redirectTo: "home",

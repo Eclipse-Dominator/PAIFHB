@@ -10,7 +10,7 @@
 <ion-content>
   <ion-slides [options]="slideOpts" #ionslides>
     <ion-slide>
-      <app-lesscontent (emitDemo)="demo($event)"> </app-lesscontent>
+      <app-lesscontent (emitQuiz)="quiz($event)" (emitDemo)="demo($event)"> </app-lesscontent>
     </ion-slide>
     <ion-slide>
       <app-editor-code [defaultEditorInput]="editorInputOptions" #code_editor>

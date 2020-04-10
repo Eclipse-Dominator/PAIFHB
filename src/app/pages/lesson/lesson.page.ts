@@ -9,6 +9,7 @@ import {
 } from "../../services/lesson-data.service";
 import { EditorCodeComponent } from "../../components/editor-code/editor-code.component";
 
+
 @Component({
   selector: "app-lesson",
   templateUrl: "./lesson.page.html",
@@ -21,7 +22,8 @@ export class LessonPage implements OnInit {
   contents: string;
   title: string;
   id: string;
-  is_on_code: boolean = false;
+    is_on_code: boolean = false;
+
   editorInputOptions: EditorInputs = {
     input: "",
     quiz_input: "",
@@ -44,6 +46,14 @@ export class LessonPage implements OnInit {
     this.is_on_code = !this.is_on_code;
   }
 
+    quiz(editorInput: EditorInputs): void {
+        this.editorInputOptions = { ...editorInput };
+        this.editorInputOptions.languages = editorInput.languages.map((x) => {
+            return { ...x };
+        });
+        this.code_editor.ngOnInit();
+    }
+
   demo(editorInput: EditorInputs): void {
     this.editorInputOptions = { ...editorInput };
     this.editorInputOptions.languages = editorInput.languages.map((x) => {
@@ -53,7 +63,7 @@ export class LessonPage implements OnInit {
     this.toggleCode();
   }
 
-  constructor(
+    constructor(
     private dataSvce: LessonDataService,
     private navCtrl: NavController
   ) {}
@@ -61,6 +71,6 @@ export class LessonPage implements OnInit {
   ngOnInit() {
     // setup the lesson page
     this.lesson = this.dataSvce.getSelected();
-    if (this.lesson == undefined) this.navCtrl.navigateBack("");
+       if (this.lesson == undefined) this.navCtrl.navigateBack("");
   }
 }

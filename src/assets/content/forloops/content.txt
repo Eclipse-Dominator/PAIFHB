@@ -29,6 +29,6 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
 
 <-- quiz -->
-quizitem1.txt
+quizitem1
 
 <-- end-page -->
