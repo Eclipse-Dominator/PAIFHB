@@ -33,7 +33,6 @@ export class LesscontentComponent implements OnInit {
       // TODO: fuck
     } else if (type == "demo") {
       this.emitDemo.emit(await this.dataSvce.getDemo(file_url));
-      await this.dataSvce.getDemo(file_url); // json for editor
     }
   }
 

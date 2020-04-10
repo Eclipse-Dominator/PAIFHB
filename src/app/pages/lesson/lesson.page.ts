@@ -6,8 +6,8 @@ import {
   LessonData,
   LessonItem,
   EditorInputs,
-} from "../../../services/lesson-data.service";
-import { EditorCodeComponent } from "../../../components/editor-code/editor-code.component";
+} from "../../services/lesson-data.service";
+import { EditorCodeComponent } from "../../components/editor-code/editor-code.component";
 
 @Component({
   selector: "app-lesson",

@@ -38,9 +38,7 @@ const routes: Routes = [
           {
             path: "",
             loadChildren: () =>
-              import("../home_tabs/lesson/lesson.module").then(
-                (m) => m.LessonPageModule
-              ),
+              import("../lesson/lesson.module").then((m) => m.LessonPageModule),
           },
         ],
       },

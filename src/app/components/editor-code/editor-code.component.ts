@@ -122,6 +122,7 @@ export class EditorCodeComponent implements OnInit {
           j++;
         }
       }
+
       this.editorInput = { ...this.defaultEditorInput };
       this.editorInput.languages = this.templates.map((x) => {
         return { ...x };

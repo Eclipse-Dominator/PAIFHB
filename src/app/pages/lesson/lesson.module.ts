@@ -8,8 +8,8 @@ import { LessonPageRoutingModule } from "./lesson-routing.module";
 
 import { LessonPage } from "./lesson.page";
 
-import { LesscontentComponent } from "../../../components/lesscontent/lesscontent.component";
-import { CodeEditorPageModule } from "../code-editor/code-editor.module";
+import { LesscontentComponent } from "../../components/lesscontent/lesscontent.component";
+import { CodeEditorPageModule } from "../home_tabs/code-editor/code-editor.module";
 
 @NgModule({
   imports: [
