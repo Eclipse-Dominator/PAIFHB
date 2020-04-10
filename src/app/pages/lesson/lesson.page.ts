@@ -35,6 +35,10 @@ export class LessonPage implements OnInit {
     allowTouchMove: false,
   };
 
+  getCurrentPage() {
+    this.slide_content.getPreviousIndex();
+  }
+
   async toggleCode() {
     if (this.is_on_code) {
       await this.slide_content.slidePrev();

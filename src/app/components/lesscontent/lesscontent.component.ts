@@ -15,6 +15,7 @@ export class LesscontentComponent implements OnInit {
   loaded: boolean = false;
 
   @Output() emitDemo: EventEmitter<any> = new EventEmitter();
+  @Output() emitProgress: EventEmitter<any> = new EventEmitter();
 
   constructor(
     private dataSvce: LessonDataService,
@@ -25,6 +26,7 @@ export class LesscontentComponent implements OnInit {
     initialSlide: 0,
     speed: 400,
     scrollbar: true,
+    watchSlidesProgress: true,
   };
 
   async codeNav(url: string, type: string): Promise<void> {
@@ -36,27 +38,25 @@ export class LesscontentComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
+  async ngOnInit(): Promise<void> {
     this.loaded = false;
-    (async () => {
-      let content_generator = this.dataSvce.getSelectedContent();
-      try {
-        for await (let slide of content_generator) {
-          this.slides.push(slide);
-        }
-      } catch (error) {
-        this.slides.push({
-          content: [
-            {
-              type: "p",
-              link: "",
-              content: "An error has occured while loading this page!",
-              style: "",
-            },
-          ],
-        });
+    let content_generator = this.dataSvce.getSelectedContent();
+    try {
+      for await (let slide of content_generator) {
+        this.slides.push(slide);
       }
-      this.loaded = true;
-    })();
+    } catch (error) {
+      this.slides.push({
+        content: [
+          {
+            type: "p",
+            link: "",
+            content: "An error has occured while loading this page!",
+            style: "",
+          },
+        ],
+      });
+    }
+    this.loaded = true;
   }
 }

@@ -15,6 +15,18 @@ const routes: Routes = [
       ),
   },
   {
+    path: "lessons",
+    children: [
+      {
+        path: "",
+        loadChildren: () =>
+          import("./pages/lesson/lesson.module").then(
+            (m) => m.LessonPageModule
+          ),
+      },
+    ],
+  },
+  {
     path: "",
     redirectTo: "home",
     pathMatch: "full",

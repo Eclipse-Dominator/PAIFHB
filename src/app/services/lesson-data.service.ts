@@ -157,13 +157,17 @@ export class LessonDataService {
     return this.appState.selectedLesson;
   }
 
-  public async *getSelectedContent() {
-    let url = "../assets/content/" + this.appState.selectedLesson.id + "/";
+  public async *getSelectedContent(folder_string: string = "") {
+    let url =
+      "../assets/content/" +
+      this.appState.selectedLesson.id +
+      "/" +
+      folder_string;
 
     let content: string[] = (await this.readFile(url + "content.txt")).split(
       "\n"
     );
-    console.log(content);
+
     let content_generator = this.parseData(content);
     for await (let slide of content_generator) {
       yield slide;
@@ -180,7 +184,7 @@ export class LessonDataService {
       content[i] = content[i].trim();
 
       if (content[i] == "<-- end-page -->") {
-        yield { ...current_page };
+        yield { ...current_page }; // yield generated page
         current_page.content = [];
         continue;
       }
