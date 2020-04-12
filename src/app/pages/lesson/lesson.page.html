@@ -6,12 +6,19 @@
         *ngIf="current_slide && code_slide"
         (click)="toggleCodeEditor()"
       >
-        <ion-icon slot="start" name="code-slash-outline"></ion-icon>
+        <ion-icon slot="icon-only" name="construct-outline"></ion-icon>
       </ion-button>
       <ion-button *ngIf="current_slide && !code_slide" (click)="toggleCode()">
-        <ion-icon slot="start" name="arrow-up-outline"></ion-icon>
+        <ion-icon slot="icon-only" name="arrow-up-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
+    <ion-buttons slot="end" *ngIf="templates_loaded">
+      <ion-button (click)="clearEditor()">
+        <ion-icon slot="end" name="trash-outline"></ion-icon>
+        Clear Template
+      </ion-button>
+    </ion-buttons>
+
     <ion-title>{{ title }}</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -19,7 +26,10 @@
 <ion-content>
   <ion-slides [options]="slideOpts" #ionslides>
     <ion-slide>
-      <app-lesscontent (emitQuiz)="quiz($event)" (emitDemo)="demo($event)">
+      <app-lesscontent
+        (emitQuiz)="updateEditor($event,false,true)"
+        (emitDemo)="updateEditor($event,true,false)"
+      >
       </app-lesscontent>
     </ion-slide>
     <ion-slide>

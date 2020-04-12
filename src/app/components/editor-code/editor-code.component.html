@@ -136,7 +136,7 @@
               </ion-text>
             </ion-item>
             <ion-item
-              *ngIf="quiz_submitted && !result.result"
+              *ngIf="quiz_submitted && result.result"
               [color]="quiz_result ? 'correct' : 'danger'"
             >
               <ion-text>
@@ -145,7 +145,7 @@
             </ion-item>
           </ion-col>
         </ion-row>
-        <ion-row *ngIf="!(quiz_submitted && !result.result)">
+        <ion-row *ngIf="!(quiz_submitted && result.result)">
           <ion-col *ngIf="result.stdout != ''">
             <ion-card>
               <ion-card-content>

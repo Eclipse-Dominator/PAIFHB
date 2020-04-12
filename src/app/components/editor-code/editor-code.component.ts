@@ -275,24 +275,4 @@ export class EditorCodeComponent implements OnInit {
     this.quiz_result = this.thoroughTrim(result) == this.thoroughTrim(ans);
     return this.quiz_result;
   }
-
-  default_result: Response = {
-    id: "id_temp",
-    stdout: "default out",
-    stderr: "",
-    result: "failure",
-    language: "cpp",
-    build_result: "success",
-    status: "success",
-    note: "sucess",
-    build_stderr: "",
-    build_stdout: "",
-    build_exit_code: 200,
-    build_memory: 121212,
-    build_time: 12,
-    exit_code: 200,
-    time: "121212",
-    memory: 121212,
-    connections: 1,
-  };
 }

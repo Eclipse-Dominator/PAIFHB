@@ -22,6 +22,7 @@ export class LessonPage implements OnInit {
   title: string;
   id: string;
   is_on_code: boolean = false;
+  templates_loaded: boolean = false;
   current_slide: number = 0;
   code_slide: number = 0;
 
@@ -54,6 +55,33 @@ export class LessonPage implements OnInit {
     }
     this.current_slide = await this.slide_content.getActiveIndex();
     this.is_on_code = !this.is_on_code;
+  }
+
+  clearEditor() {
+    this.editorInputOptions = {
+      input: "",
+      quiz_input: "",
+      quiz_output: "",
+      languages: [],
+    };
+    this.code_editor.ngOnInit();
+    this.templates_loaded = false;
+  }
+
+  updateEditor(
+    editorInput: EditorInputs,
+    autoscroll: boolean = false,
+    quiz_mode: boolean = false
+  ): void {
+    console.log(quiz_mode, autoscroll);
+    this.editorInputOptions = { ...editorInput };
+    this.editorInputOptions.languages = editorInput.languages.map((x) => {
+      return { ...x };
+    });
+    this.code_editor.ngOnInit();
+    this.templates_loaded = true;
+    if (autoscroll) this.toggleCode();
+    if (quiz_mode) this.templates_loaded = false;
   }
 
   async toggleCodeEditor() {
