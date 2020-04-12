@@ -56,9 +56,9 @@ export class LessonDataService {
   private appState: AppState = {
     //state of app
     defaultEditorInput: undefined,
-      selectedLesson: undefined,
-      demoMode: false,
-      quizMode: false,
+    selectedLesson: undefined,
+    demoMode: false,
+    quizMode: false,
   };
 
   public async getCodeTemplates(): Promise<EditorInputs> {
@@ -69,50 +69,24 @@ export class LessonDataService {
     return this.parseCodeTxt(raw_template);
   }
 
-  public async getDemo(url: string): Promise<any> {
-    let file_url: string = "../assets/content/" + url;
+  public async loadEditor(url: string, quiz: boolean = false): Promise<Object> {
+    let file_url: string = "../assets/content/";
+    file_url += quiz ? url + "/quiz.txt" : url;
     let rawCode: string = await this.readFile(file_url);
     //console.log(rawCode);
     return this.parseCodeTxt(rawCode);
   }
 
-  public async getQuiz(url: string): Promise<any> {
-      let default_url: string = "../assets/content/" + url + "/default.txt";
-      let rawDefault: string = await this.readFile(default_url);
-      return this.parseCodeTxt(rawDefault);
-  }
-
-  public escapeJson(faulty_json: string): string {
-    /*
-        json escapes. 
-        newline -> \n        /\n/ => '\n'
-        Tab -> \t            /\t/ => '\t'
-        Double Quote ->\"    /\"/ => '\"'
-        \ -> \\              /\\/ => '\\'
-                             /\f/ => '\f'
-                             /\r/ => '\r'
-                             [\b] => '\b'
-      */
-
-    return faulty_json
-      .trim()
-      .replace(/\\/g, "\\\\")
-      .replace(/\t/g, "\\t")
-      .replace(/\"/g, '\\"')
-      .replace(/\f/g, "\\f")
-      .replace(/\r/g, "\\r")
-      .replace(/[\b]/g, "\\b")
-      .replace(/\n/g, "\\n");
-  }
-
   public parseCodeTxt(rawString: string): EditorInputs {
     let jsonArray: string[] = [];
-
-    let type_split: string = "%%%%segment-splitter>>>>>";
-    let code_split: string = "||||||||||";
+    rawString = rawString.replace(/\r/g, "");
+    let type_split: RegExp = /(?:\n?)(?:%%%%segment-splitter>>>>>)/;
+    let code_split: RegExp = /(?:\|\|\|\|\|\|\|\|\|\|)(?:\n?)/;
 
     let jsonString: string = "";
+
     let rawCodes: string[] = rawString.split(type_split);
+
     let seperator: string = '"languages":[{\n"language":"';
 
     for (let code of rawCodes) {
@@ -121,16 +95,17 @@ export class LessonDataService {
       }
 
       let code_grp: string[] = code.split(code_split);
-      code_grp[1] = this.escapeJson(code_grp[1]);
+      code_grp[1] = JSON.stringify(code_grp[1]); //this.escapeJson(code_grp[1]);
+
       if (
         code_grp[0] == "input" ||
         code_grp[0] == "quiz_output" ||
         code_grp[0] == "quiz_input"
       ) {
-        jsonArray.push('"' + code_grp[0].trim() + '":"' + code_grp[1] + '"');
+        jsonArray.push('"' + code_grp[0].trim() + '":' + code_grp[1]);
       } else {
-        jsonString += seperator + code_grp[0].trim() + '","code":"';
-        jsonString += code_grp[1] + '"\n}';
+        jsonString += seperator + code_grp[0].trim() + '","code":';
+        jsonString += code_grp[1] + "\n}";
         seperator = ',{\n"language":"';
       }
     }
@@ -142,12 +117,10 @@ export class LessonDataService {
       "{\n" + jsonArray.join(",") + "\n}"
     );
     parsedJson.languages.sort((a, b) => (a.language > b.language ? 1 : -1));
-
     return parsedJson;
   }
 
   public getAllLessonData(): LessonData[] {
-    console.log(this.rawData);
     return this.rawData;
   }
 
@@ -161,21 +134,13 @@ export class LessonDataService {
 
   public async *getSelectedContent(folder_string: string = "") {
     // if folder_string not empty, parse question.txt instead
-    let url: string = "../assets/content/" + this.appState.selectedLesson.id + "/";
+    let url: string =
+      "../assets/content/" + this.appState.selectedLesson.id + "/";
+    url += folder_string ? folder_string + "/" : "";
+    url += "content.txt";
     let content: string[];
-      if (folder_string.length > 0) {
-          url += folder_string + "/";
 
-          content = (await this.readFile(url + "question.txt")).split(
-              "\n"
-          );
-      }
-      else {
-          content = (await this.readFile(url + "content.txt")).split(
-              "\n"
-          );
-      }
-    console.log(content);
+    content = (await this.readFile(url)).split("\n");
     let content_generator = this.parseData(content);
     for await (let slide of content_generator) {
       yield slide;

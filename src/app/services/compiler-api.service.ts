@@ -136,14 +136,14 @@ export class CompilerApiService {
 export interface Response {
   id: string;
   language: string;
-  note: null;
+  note: null | string;
   status: string;
-  build_stdout: null;
-  build_stderr: null;
+  build_stdout: null | string;
+  build_stderr: null | string;
   build_exit_code: number;
-  build_time: null;
+  build_time: null | number;
   build_memory: number;
-  build_result: null;
+  build_result: null | string;
   stdout: string;
   stderr: string;
   exit_code: number;

@@ -11,7 +11,7 @@ import {
   ToastController,
 } from "@ionic/angular";
 import { EditorInputs, Language } from "../../services/lesson-data.service";
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: "app-editor-code",
@@ -27,14 +27,13 @@ export class EditorCodeComponent implements OnInit {
     quiz_output: "",
     languages: [],
   };
-  quizmode = false;
-  @Input() demomode = false;
+  @Input() quizmode: boolean = false;
 
   templates: Language[];
-
   editorInput: EditorInputs = { ...this.defaultEditorInput };
-    submitted: boolean = false;
-    submittedQuiz: boolean = false;
+  submitted: boolean = false;
+  quiz_submitted: boolean = false;
+  quiz_result: boolean = false;
 
   result: FilteredResponse = {
     language: "",
@@ -42,7 +41,7 @@ export class EditorCodeComponent implements OnInit {
     stderr: "",
     time: "",
     result: true,
-    };
+  };
 
   editor = {
     add_input: false,
@@ -64,8 +63,6 @@ export class EditorCodeComponent implements OnInit {
         return;
       }
     }
-    if (this.quizmode || this.demomode)
-      this.presentToast("No demo code available! :(");
     this.editorInput.languages.push({
       language: search_lang,
       code: "",
@@ -99,15 +96,15 @@ export class EditorCodeComponent implements OnInit {
     toast.present();
   }
 
-    constructor(
-        private route: ActivatedRoute,
+  constructor(
+    private route: ActivatedRoute,
     private cApi: CompilerApiService,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController
   ) {}
 
-    async ngOnInit() {
-        this.quizmode = this.route.snapshot.paramMap.get('quizfolder') != null;
+  async ngOnInit() {
+    this.quizmode = this.route.snapshot.paramMap.get("quizfolder") != null;
     try {
       this.templates = (await this.cApi.getTemplateJSON()).languages;
       let i = -1,
@@ -142,7 +139,7 @@ export class EditorCodeComponent implements OnInit {
     }
 
     this.editor = {
-      add_input: this.editorInput.input == "" ? false : true,
+      add_input: this.editorInput.input ? true : false,
       code_input: this.editorInput.input,
       compiler:
         this.defaultEditorInput.languages.length > 0
@@ -162,7 +159,7 @@ export class EditorCodeComponent implements OnInit {
       return { ...x };
     });
     this.editor = {
-      add_input: this.editorInput.input == "" ? false : true,
+      add_input: this.editorInput.input ? true : false,
       code_input: this.editorInput.input,
       compiler:
         this.defaultEditorInput.languages.length > 0
@@ -173,23 +170,20 @@ export class EditorCodeComponent implements OnInit {
     this.onSelectChange();
   }
 
-    updateSubmit(quizMode: boolean, value: boolean) {
-        if (quizMode) this.submittedQuiz = value;
-        else this.submitted = value;
-    }
-
   @ViewChild("slidesTag", { static: false }) slidesTag: IonSlides;
-    
+
   async onSubmit(quizMode: boolean = false): Promise<void> {
     //console.log(this.editor);
     this.result.language = "";
-      let qi = this.defaultEditorInput.quiz_input;
-      let ei = this.editor.add_input;
-      let tmp_input: string = (quizMode && qi) ? qi
-                            : ei ? this.editor.code_input : "";
+    let qi = this.defaultEditorInput.quiz_input;
+    let ei = this.editor.add_input;
+    let tmp_input: string =
+      quizMode && qi ? qi : ei ? this.editor.code_input : "";
 
     try {
-        this.updateSubmit(quizMode, true);
+      this.submitted = true;
+      this.quiz_submitted = quizMode;
+
       let dataID: string = (
         await this.cApi.compile_code(
           this.editor.code_content,
@@ -197,61 +191,94 @@ export class EditorCodeComponent implements OnInit {
           this.editor.compiler.replace("📝", "").replace("📄", "").trim()
         )
       ).id;
+
+      //let dataID: string = this.default_result.id;
       this.slidesTag.slideNext();
       let result_generator = this.cApi.continued_query(dataID, 5);
       let raw_response;
+      //raw_response = this.default_result;
+
       for await (raw_response of result_generator) {
         this.presentToast(
           typeof raw_response == "object" ? "retrieved" : raw_response
         );
-        //console.log(await raw_response);
-        }
-        this.getImptData(raw_response, this.result, quizMode);
-        this.updateSubmit(quizMode, false);
+        console.log(await raw_response);
+      }
+
+      this.getImptData(raw_response, this.result, quizMode);
     } catch (error) {
       this.presentToast(error);
       //console.log(error);
-        this.updateSubmit(quizMode, false);
     }
-    }
+    this.submitted = false;
+  }
 
-    thoroughTrim(str: string) {
-        let stra: string[] = str.split('\n');
-        let i = 0;
-        for (let line of stra) {
-            stra[i++] = line.trim();
-        }
-        return stra.join('\n');
+  thoroughTrim(str: string) {
+    let stra: string[] = str.trim().split("\n");
+    let i = 0;
+    for (let line of stra) {
+      stra[i++] = line.trim();
     }
+    console.log(stra);
+    return stra.join("\n");
+  }
 
-  getImptData(data: Response, result: FilteredResponse, quizMode: boolean): void {
+  getImptData(
+    data: Response,
+    result: FilteredResponse,
+    quizMode: boolean
+  ): void {
     result.language = data.language;
 
     if (data.build_result === "failure") {
-      result.stderr = quizMode ? "build error when compiling code" :
+      result.stderr =
         "build exit code: " + data.build_exit_code + "\n" + data.build_stderr;
       result.stdout = data.build_stdout;
       result.result = false;
     } else {
       result.stdout = data.stdout;
-        if (data.result === "failure") {
-            result.stderr = quizMode ? "an error occurred when running the code." :
-                "exit code: " + data.exit_code + "\n" + data.stderr;
-            result.result = false;
-        } else if (quizMode) {
-            if (this.thoroughTrim(this.defaultEditorInput.quiz_output.trim()) != this.thoroughTrim(result.stdout.trim())) {
-                result.stdout = "";
-                result.stderr = "wrong answer.";
-                result.result = false;
-            } else {
-                result.stdout = "correct answer.";
-                result.result = true;
-            }
-        } else {
+      if (data.result === "failure" || data.stderr != "") {
+        result.stderr = "exit code: " + data.exit_code + "\n" + data.stderr;
+        result.result = false;
+      } else {
         result.stderr = data.stderr;
         result.result = true;
       }
     }
+
+    result.stderr =
+      quizMode && !result.result ? "error compiling/running" : result.stderr;
+
+    result.stdout = quizMode
+      ? this.ValidateAns(result.stdout, this.defaultEditorInput.quiz_output)
+        ? "Correct!"
+        : "Wrong!"
+      : result.stdout;
     console.log(result);
   }
+
+  ValidateAns(result: string, ans: string): Boolean {
+    this.quiz_result = this.thoroughTrim(result) == this.thoroughTrim(ans);
+    return this.quiz_result;
+  }
+
+  default_result: Response = {
+    id: "id_temp",
+    stdout: "default out",
+    stderr: "",
+    result: "failure",
+    language: "cpp",
+    build_result: "success",
+    status: "success",
+    note: "sucess",
+    build_stderr: "",
+    build_stdout: "",
+    build_exit_code: 200,
+    build_memory: 121212,
+    build_time: 12,
+    exit_code: 200,
+    time: "121212",
+    memory: 121212,
+    connections: 1,
+  };
 }
