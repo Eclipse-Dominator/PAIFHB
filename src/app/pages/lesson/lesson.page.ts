@@ -9,7 +9,6 @@ import {
 } from "../../services/lesson-data.service";
 import { EditorCodeComponent } from "../../components/editor-code/editor-code.component";
 
-
 @Component({
   selector: "app-lesson",
   templateUrl: "./lesson.page.html",
@@ -22,7 +21,9 @@ export class LessonPage implements OnInit {
   contents: string;
   title: string;
   id: string;
-    is_on_code: boolean = false;
+  is_on_code: boolean = false;
+  current_slide: number = 0;
+  code_slide: number = 0;
 
   editorInputOptions: EditorInputs = {
     input: "",
@@ -41,33 +42,25 @@ export class LessonPage implements OnInit {
     this.slide_content.getPreviousIndex();
   }
 
+  codePageChange(page: number) {
+    this.code_slide = page;
+  }
+
   async toggleCode() {
     if (this.is_on_code) {
       await this.slide_content.slidePrev();
     } else {
       await this.slide_content.slideNext();
     }
+    this.current_slide = await this.slide_content.getActiveIndex();
     this.is_on_code = !this.is_on_code;
   }
 
-    quiz(editorInput: EditorInputs): void {
-        this.editorInputOptions = { ...editorInput };
-        this.editorInputOptions.languages = editorInput.languages.map((x) => {
-            return { ...x };
-        });
-        this.code_editor.ngOnInit();
-    }
-
-  demo(editorInput: EditorInputs): void {
-    this.editorInputOptions = { ...editorInput };
-    this.editorInputOptions.languages = editorInput.languages.map((x) => {
-      return { ...x };
-    });
-    this.code_editor.ngOnInit();
-    this.toggleCode();
+  async toggleCodeEditor() {
+    await this.code_editor.slidesTag.slidePrev();
   }
 
-    constructor(
+  constructor(
     private dataSvce: LessonDataService,
     private navCtrl: NavController
   ) {}
@@ -75,6 +68,6 @@ export class LessonPage implements OnInit {
   ngOnInit() {
     // setup the lesson page
     this.lesson = this.dataSvce.getSelected();
-       if (this.lesson == undefined) this.navCtrl.navigateBack("");
+    if (this.lesson == undefined) this.navCtrl.navigateBack("");
   }
 }

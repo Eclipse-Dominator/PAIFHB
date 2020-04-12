@@ -2,7 +2,7 @@
   href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap"
   rel="stylesheet"
 />
-<ion-slides #slidesTag>
+<ion-slides (ionSlideDidChange)="onSlideChange()" #slidesTag>
   <ion-slide>
     <form (ngSubmit)="onSubmit()">
       <ion-card>

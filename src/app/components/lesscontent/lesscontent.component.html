@@ -1,4 +1,15 @@
-<ion-slides [options]="slideOpts">
+<ion-progress-bar
+  [value]="read_progress"
+  color="secondary"
+  [type]="loaded ? 'determinate' : 'indeterminate'"
+>
+</ion-progress-bar>
+
+<ion-slides
+  [options]="slideOpts"
+  (ionSlideTransitionEnd)="updateProgress()"
+  #ionslides
+>
   <ion-slide *ngFor="let slide of slides" class="class-container">
     <div [ngSwitch]="element.type" *ngFor="let element of slide.content">
       <h1 *ngSwitchCase="'title'">{{ element.content }}</h1>

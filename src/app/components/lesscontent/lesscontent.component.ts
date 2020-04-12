@@ -1,5 +1,12 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { NavController } from "@ionic/angular";
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+} from "@angular/core";
+import { NavController, IonSlides } from "@ionic/angular";
 import {
   LessonDataService,
   RawSlide,
@@ -14,10 +21,14 @@ import { ActivatedRoute } from "@angular/router";
 export class LesscontentComponent implements OnInit {
   slides: RawSlide[] = [];
   loaded: boolean = false;
+  read_progress: number = 0;
+  total_page: number = 0;
 
   @Output() emitQuiz: EventEmitter<any> = new EventEmitter();
   @Output() emitDemo: EventEmitter<any> = new EventEmitter();
   @Output() emitProgress: EventEmitter<any> = new EventEmitter();
+
+  @ViewChild("ionslides", { static: false }) ionSlides: IonSlides;
 
   constructor(
     private route: ActivatedRoute,
@@ -41,6 +52,12 @@ export class LesscontentComponent implements OnInit {
     }
   }
 
+  async updateProgress(): Promise<void> {
+    let current_page: number = 1 + (await this.ionSlides.getActiveIndex());
+    console.log(current_page, this.total_page);
+    this.read_progress = this.total_page ? current_page / this.total_page : 0;
+  }
+
   async ngOnInit() {
     let quizID: string = this.route.snapshot.paramMap.get("quizfolder");
     this.loaded = false;
@@ -55,6 +72,7 @@ export class LesscontentComponent implements OnInit {
 
     try {
       for await (let slide of content_generator) {
+        this.total_page += 1;
         this.slides.push(slide);
       }
     } catch (error) {
@@ -70,5 +88,6 @@ export class LesscontentComponent implements OnInit {
       });
     }
     this.loaded = true;
+    this.updateProgress();
   }
 }

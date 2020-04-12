@@ -1,4 +1,11 @@
-import { Component, OnInit, ViewChild, Input } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  Input,
+  Output,
+  EventEmitter,
+} from "@angular/core";
 import {
   CompilerApiService,
   Response,
@@ -28,6 +35,8 @@ export class EditorCodeComponent implements OnInit {
     languages: [],
   };
   @Input() quizmode: boolean = false;
+
+  @Output() pageChange: EventEmitter<any> = new EventEmitter();
 
   templates: Language[];
   editorInput: EditorInputs = { ...this.defaultEditorInput };
@@ -171,6 +180,11 @@ export class EditorCodeComponent implements OnInit {
   }
 
   @ViewChild("slidesTag", { static: false }) slidesTag: IonSlides;
+
+  async onSlideChange(): Promise<void> {
+    let current_slides = await this.slidesTag.getActiveIndex();
+    this.pageChange.emit(current_slides);
+  }
 
   async onSubmit(quizMode: boolean = false): Promise<void> {
     //console.log(this.editor);

@@ -2,6 +2,15 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
+      <ion-button
+        *ngIf="current_slide && code_slide"
+        (click)="toggleCodeEditor()"
+      >
+        <ion-icon slot="start" name="code-slash-outline"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="current_slide && !code_slide" (click)="toggleCode()">
+        <ion-icon slot="start" name="arrow-up-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
     <ion-title>{{ title }}</ion-title>
   </ion-toolbar>
@@ -10,10 +19,15 @@
 <ion-content>
   <ion-slides [options]="slideOpts" #ionslides>
     <ion-slide>
-      <app-lesscontent (emitQuiz)="quiz($event)" (emitDemo)="demo($event)"> </app-lesscontent>
+      <app-lesscontent (emitQuiz)="quiz($event)" (emitDemo)="demo($event)">
+      </app-lesscontent>
     </ion-slide>
     <ion-slide>
-      <app-editor-code [defaultEditorInput]="editorInputOptions" #code_editor>
+      <app-editor-code
+        (pageChange)="codePageChange($event)"
+        [defaultEditorInput]="editorInputOptions"
+        #code_editor
+      >
       </app-editor-code>
     </ion-slide>
   </ion-slides>
