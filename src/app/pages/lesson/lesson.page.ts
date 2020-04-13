@@ -37,6 +37,8 @@ export class LessonPage implements OnInit {
     speed: 400,
     direction: "vertical",
     allowTouchMove: false,
+    slidesPerView: 1,
+    spaceBetween: 20,
   };
 
   getCurrentPage() {
