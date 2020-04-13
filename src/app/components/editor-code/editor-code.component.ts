@@ -16,6 +16,7 @@ import {
   IonSlides,
   IonSelect,
   ToastController,
+  IonTextarea,
 } from "@ionic/angular";
 import { EditorInputs, Language } from "../../services/lesson-data.service";
 import { ActivatedRoute } from "@angular/router";
@@ -27,7 +28,7 @@ import { ActivatedRoute } from "@angular/router";
 })
 export class EditorCodeComponent implements OnInit {
   @ViewChild("ionSelect", { static: false }) ionSelect: IonSelect;
-
+  @ViewChild("codeArea", { static: false }) codeArea: IonTextarea;
   @Input() defaultEditorInput: EditorInputs = {
     input: "",
     quiz_input: "",
@@ -61,6 +62,10 @@ export class EditorCodeComponent implements OnInit {
 
   caps_first_word(x: string) {
     return x[0].toUpperCase() + x.slice(1);
+  }
+
+  formatCode(x) {
+    console.log(x.detail.target.selectionStart);
   }
 
   onSelectChange(): void {

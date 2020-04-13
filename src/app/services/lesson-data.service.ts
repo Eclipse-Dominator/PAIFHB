@@ -95,7 +95,7 @@ export class LessonDataService {
       }
 
       let code_grp: string[] = code.split(code_split);
-      code_grp[1] = JSON.stringify(code_grp[1]); //this.escapeJson(code_grp[1]);
+      code_grp[1] = JSON.stringify(code_grp[1]);
 
       if (
         code_grp[0] == "input" ||
