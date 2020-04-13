@@ -263,11 +263,12 @@ export class EditorCodeComponent implements OnInit {
     result.stderr =
       quizMode && !result.result ? "error compiling/running" : result.stderr;
 
-    result.stdout = quizMode
-      ? this.ValidateAns(result.stdout, this.defaultEditorInput.quiz_output)
-        ? "Correct!"
-        : "Wrong!"
-      : result.stdout;
+    result.stdout =
+      quizMode && result.result
+        ? this.ValidateAns(result.stdout, this.defaultEditorInput.quiz_output)
+          ? "Correct!"
+          : "Wrong!"
+        : result.stdout;
     console.log(result);
   }
 

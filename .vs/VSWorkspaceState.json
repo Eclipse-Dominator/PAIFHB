@@ -3,14 +3,15 @@
     "",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\tab1",
+    "\\src\\app\\components",
+    "\\src\\app\\components\\lesscontent",
+    "\\src\\app\\pages",
+    "\\src\\app\\pages\\lesson",
     "\\src\\assets",
     "\\src\\assets\\content",
-    "\\src\\assets\\content\\forloops",
-    "\\src\\assets\\content\\forloops\\quizitem1",
     "\\src\\assets\\content\\images",
-    "\\src\\assets\\content\\text"
+    "\\src\\assets\\icon"
   ],
-  "SelectedNode": "\\src\\assets\\content\\forloops\\tryitem1.txt",
+  "SelectedNode": "\\src\\assets\\content\\forloops\\quizitem1\\default.txt",
   "PreviewInSolutionExplorer": false
 }
