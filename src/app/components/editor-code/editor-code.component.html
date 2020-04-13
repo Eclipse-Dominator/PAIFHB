@@ -3,7 +3,7 @@
   rel="stylesheet"
 />
 <ion-slides (ionSlideDidChange)="onSlideChange()" #slidesTag>
-  <ion-slide>
+  <ion-slide class="class-container">
     <form (ngSubmit)="onSubmit()">
       <ion-card>
         <ion-item>
@@ -146,7 +146,7 @@
           </ion-col>
         </ion-row>
         <ion-row *ngIf="!(quiz_submitted && result.result)">
-          <ion-col *ngIf="result.stdout != ''">
+          <ion-col *ngIf="result.stdout != '' && !quiz_submitted">
             <ion-card>
               <ion-card-content>
                 <ion-label position="stacked" color="primary">StdOut</ion-label>
