@@ -32,6 +32,7 @@
             [(ngModel)]="editor.code_content"
             name="code_content"
             (ionBlur)="onCodeUpdate()"
+            (ionChange)="onCodeChange($event)"
             required
           ></ion-textarea>
         </ion-item>
