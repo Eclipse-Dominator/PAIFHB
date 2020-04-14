@@ -29,7 +29,8 @@ import { ActivatedRoute } from "@angular/router";
 })
 export class EditorCodeComponent implements OnInit, AfterViewInit {
   @ViewChild("ionSelect", { static: false }) ionSelect: IonSelect;
-  @ViewChild("codeArea", { static: false }) codeArea: IonTextarea;
+  @ViewChild("slidesTag", { static: false }) slidesTag: IonSlides;
+
   @Input() defaultEditorInput: EditorInputs = {
     input: "",
     quiz_input: "",
@@ -40,7 +41,6 @@ export class EditorCodeComponent implements OnInit, AfterViewInit {
 
   @Output() pageChange: EventEmitter<any> = new EventEmitter();
 
-  htmlTextArea: HTMLTextAreaElement;
   templates: Language[];
   editorInput: EditorInputs = { ...this.defaultEditorInput };
   submitted: boolean = false;
@@ -62,60 +62,6 @@ export class EditorCodeComponent implements OnInit, AfterViewInit {
     compiler: "",
     code_content: "",
   };
-
-  tempOptions = "Primary";
-
-  formatCode(x) {
-    console.log(x);
-  }
-
-  blurred(event) {
-    console.log(event);
-  }
-
-  onCodeChange(event) {
-    if (
-      event.detail.inputType != "insertText" &&
-      event.detail.inputType != "insertLineBreak"
-    )
-      return;
-    const autosymbols = {
-      "{": "}",
-      "[": "]",
-      "(": ")",
-    };
-
-    let caret = event.detail.target.selectionStart; // caret location
-
-    let str_before = event.detail.target.value.slice(0, caret); //return start -> \n
-    let str_after = event.detail.target.value.slice(caret); //return start -> \n
-
-    if (str_before[caret - 1] == "\n") {
-      // check if last input is \n
-      let lines_before_newline = str_before.split("\n").reverse();
-
-      for (let line of lines_before_newline.slice(1)) {
-        if (line.trim() == "") {
-          continue;
-        }
-        let spaceBefore = line.match(/^\s{0,}/g)[0];
-
-        let new_string = str_before + spaceBefore + str_after;
-        this.htmlTextArea.value = new_string;
-
-        this.htmlTextArea.setSelectionRange(
-          caret + spaceBefore.length,
-          caret + spaceBefore.length
-        );
-        return;
-      }
-    } else if (autosymbols[str_before[caret - 1]] != undefined) {
-      //if last input is a paranthesis
-      this.htmlTextArea.value =
-        str_before + autosymbols[str_before[caret - 1]] + str_after;
-      this.htmlTextArea.setSelectionRange(caret, caret);
-    }
-  }
 
   onSelectChange(): void {
     let search_lang: string = this.editor.compiler;
@@ -208,10 +154,6 @@ export class EditorCodeComponent implements OnInit, AfterViewInit {
     this.onSelectChange();
   }
 
-  async ngAfterViewInit(): Promise<void> {
-    this.htmlTextArea = await this.codeArea.getInputElement();
-  }
-
   async reset(): Promise<void> {
     if (this.templates.length == 0) {
       return this.ngOnInit();
@@ -231,8 +173,6 @@ export class EditorCodeComponent implements OnInit, AfterViewInit {
     };
     this.onSelectChange();
   }
-
-  @ViewChild("slidesTag", { static: false }) slidesTag: IonSlides;
 
   async onSlideChange(): Promise<void> {
     let current_slides = await this.slidesTag.getActiveIndex();

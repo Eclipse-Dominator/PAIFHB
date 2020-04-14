@@ -31,11 +31,10 @@
             rows="12"
             [(ngModel)]="editor.code_content"
             name="code_content"
-            (ionInput)="onCodeChange($event)"
             (ionBlur)="onCodeUpdate()"
-            #codeArea
             required
             autoGrow
+            app-codearea
           ></ion-textarea>
         </ion-item>
         <ion-item>
