@@ -21,7 +21,6 @@ import {
 } from "@ionic/angular";
 import { EditorInputs, Language } from "../../services/lesson-data.service";
 import { ActivatedRoute } from "@angular/router";
-import { of } from "rxjs";
 
 @Component({
   selector: "app-editor-code",
@@ -64,12 +63,14 @@ export class EditorCodeComponent implements OnInit, AfterViewInit {
     code_content: "",
   };
 
-  caps_first_word(x: string) {
-    return x[0].toUpperCase() + x.slice(1);
-  }
+  tempOptions = "Primary";
 
   formatCode(x) {
     console.log(x);
+  }
+
+  blurred(event) {
+    console.log(event);
   }
 
   onCodeChange(event) {

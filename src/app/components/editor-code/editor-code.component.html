@@ -19,7 +19,7 @@
               *ngFor="let i of editorInput.languages"
               [value]="i.language"
             >
-              {{ caps_first_word(i.language) }}
+              {{ i.language | titlecase }}
             </ion-select-option>
           </ion-select>
         </ion-item>
@@ -38,7 +38,6 @@
             autoGrow
           ></ion-textarea>
         </ion-item>
-
         <ion-item>
           <ion-label>stdIn</ion-label>
           <ion-toggle
