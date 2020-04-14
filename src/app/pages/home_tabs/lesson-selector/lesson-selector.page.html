@@ -1,5 +1,11 @@
 <ion-header [translucent]="true" mode="ios">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-select [placeholder]="SelectedContent" interface="action-sheet">
+        <ion-select-option value="default">Vanilla</ion-select-option>
+        <ion-select-option value="extracontent1">DLC</ion-select-option>
+      </ion-select>
+    </ion-buttons>
     <ion-title>
       {{ Title }}
     </ion-title>
@@ -14,8 +20,9 @@
         *ngFor="let gridCol of gridRow.data"
       >
         <ion-button color="dark" (click)="lessonNav(gridCol)">
-        <ion-icon [name]="gridCol.icon"></ion-icon>
-        </ion-button> <br />
+          <ion-icon [name]="gridCol.icon"></ion-icon>
+        </ion-button>
+        <br />
         <ion-text>{{ gridCol.title }}</ion-text>
       </ion-col>
     </ion-row>

@@ -20,6 +20,7 @@ export class LessonSelectorPage implements OnInit {
     private dataSvce: LessonDataService
   ) {}
 
+  SelectedContent: string = "Vanilla";
   GridData: LessonData[] = [];
 
   ngOnInit() {

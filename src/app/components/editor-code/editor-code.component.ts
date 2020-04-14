@@ -85,7 +85,7 @@ export class EditorCodeComponent implements OnInit {
 
   onCodeChange(event): void {
     this.onCodeUpdate();
-    console.log(x.detail.target.selectionStart);
+    console.log(event.detail.target.selectionStart);
     let newContent: string;
     if (event.detail.inputType == "insertLineBreak") {
       newContent = this.autoIndent(

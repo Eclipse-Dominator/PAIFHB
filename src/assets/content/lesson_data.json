@@ -17,11 +17,16 @@
   {
     "data": [
       {
+        "title": "Iteration",
+        "icon": "globe-outline",
+        "id": "iteration"
+      },
+      {
         "title": "Recursion",
         "icon": "globe-outline",
         "id": "recursion"
       }
     ],
-    "category": "Loops"
+    "category": "Basic Logic"
   }
 ]
