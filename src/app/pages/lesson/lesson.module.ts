@@ -9,7 +9,8 @@ import { LessonPageRoutingModule } from "./lesson-routing.module";
 import { LessonPage } from "./lesson.page";
 
 import { LesscontentComponent } from "../../components/lesscontent/lesscontent.component";
-import { CodeEditorPageModule } from "../home_tabs/code-editor/code-editor.module";
+//import { CodeEditorPageModule } from "../home_tabs/code-editor/code-editor.module";
+import { EditorCodeModule } from "../../components/editor-code/editor-code.module";
 
 @NgModule({
   imports: [
@@ -17,7 +18,7 @@ import { CodeEditorPageModule } from "../home_tabs/code-editor/code-editor.modul
     FormsModule,
     IonicModule,
     LessonPageRoutingModule,
-    CodeEditorPageModule,
+    EditorCodeModule,
   ],
   declarations: [LessonPage, LesscontentComponent],
 })

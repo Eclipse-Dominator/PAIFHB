@@ -2,16 +2,16 @@
 #include <stdio.h>
 
 int main(void) {
-	// your code goes here
-	return 0;
+ // your code goes here
+ return 0;
 }
 %%%%segment-splitter>>>>>cpp||||||||||
 #include <iostream>
 using namespace std;
 
 int main() {
-	// your code goes here
-	return 0;
+ // your code goes here
+ return 0;
 }
 %%%%segment-splitter>>>>>objective-c||||||||||
 #import <objc/objc.h>
@@ -21,8 +21,8 @@ int main() {
 @implementation TestObj
 int main()
 {
-	// your code goes here
-	return 0;
+ // your code goes here
+ return 0;
 }
 @end
 %%%%segment-splitter>>>>>java||||||||||
@@ -32,26 +32,26 @@ import java.io.*;
 
 class Main
 {
-	public static void main (String[] args) throws java.lang.Exception
-	{
-		// your code goes here
-	}
+ public static void main (String[] args) throws java.lang.Exception
+ {
+  // your code goes here
+ }
 }
 %%%%segment-splitter>>>>>swift||||||||||
 // we read standard input line by line
 while let line = readLine() {
-	// we write the line to the standard output
-	print(line)
+ // we write the line to the standard output
+ print(line)
 }
 %%%%segment-splitter>>>>>csharp||||||||||
 using System;
 
 public class Test
 {
-	public static void Main()
-	{
-		// your code goes here
-	}
+ public static void Main()
+ {
+  // your code goes here
+ }
 }
 %%%%segment-splitter>>>>>haskell||||||||||
 main = -- your code goes here
@@ -75,9 +75,9 @@ main = -- your code goes here
 Imports System
 
 Public Class Test
-	Public Shared Sub Main()
-		' your code goes here
-	End Sub
+ Public Shared Sub Main()
+  ' your code goes here
+ End Sub
 End Class
 %%%%segment-splitter>>>>>mysql||||||||||
 -- your code goes here

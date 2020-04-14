@@ -8,7 +8,7 @@ import { CodeEditorPageRoutingModule } from "./code-editor-routing.module";
 
 import { CodeEditorPage } from "./code-editor.page";
 
-import { EditorCodeComponent } from "../../../components/editor-code/editor-code.component";
+import { EditorCodeModule } from "../../../components/editor-code/editor-code.module";
 
 @NgModule({
   imports: [
@@ -16,8 +16,8 @@ import { EditorCodeComponent } from "../../../components/editor-code/editor-code
     FormsModule,
     IonicModule,
     CodeEditorPageRoutingModule,
+    EditorCodeModule,
   ],
-  declarations: [CodeEditorPage, EditorCodeComponent],
-  exports: [EditorCodeComponent],
+  declarations: [CodeEditorPage],
 })
 export class CodeEditorPageModule {}

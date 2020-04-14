@@ -19,7 +19,7 @@
               *ngFor="let i of editorInput.languages"
               [value]="i.language"
             >
-              {{ caps_first_word(i.language) }}
+              {{ i.language | titlecase }}
             </ion-select-option>
           </ion-select>
         </ion-item>
@@ -31,14 +31,12 @@
             rows="12"
             [(ngModel)]="editor.code_content"
             name="code_content"
-            (ionInput)="onCodeChange($event)"
             (ionBlur)="onCodeUpdate()"
-            #codeArea
             required
             autoGrow
+            app-codearea
           ></ion-textarea>
         </ion-item>
-
         <ion-item>
           <ion-label>stdIn</ion-label>
           <ion-toggle

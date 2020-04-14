@@ -5,6 +5,7 @@ import {
   Input,
   Output,
   EventEmitter,
+  AfterViewInit,
 } from "@angular/core";
 import {
   CompilerApiService,
@@ -26,9 +27,10 @@ import { ActivatedRoute } from "@angular/router";
   templateUrl: "./editor-code.component.html",
   styleUrls: ["./editor-code.component.scss"],
 })
-export class EditorCodeComponent implements OnInit {
+export class EditorCodeComponent implements OnInit, AfterViewInit {
   @ViewChild("ionSelect", { static: false }) ionSelect: IonSelect;
-  @ViewChild("codeArea", { static: false }) codeArea: IonTextarea;
+  @ViewChild("slidesTag", { static: false }) slidesTag: IonSlides;
+
   @Input() defaultEditorInput: EditorInputs = {
     input: "",
     quiz_input: "",
@@ -40,11 +42,11 @@ export class EditorCodeComponent implements OnInit {
   @Output() pageChange: EventEmitter<any> = new EventEmitter();
 
   templates: Language[];
-  previous: Language[];
   editorInput: EditorInputs = { ...this.defaultEditorInput };
   submitted: boolean = false;
   quiz_submitted: boolean = false;
   quiz_result: boolean = false;
+  current_selected_language_index: number = 0;
 
   result: FilteredResponse = {
     language: "",
@@ -61,16 +63,13 @@ export class EditorCodeComponent implements OnInit {
     code_content: "",
   };
 
-  caps_first_word(x: string) {
-    return x[0].toUpperCase() + x.slice(1);
-  }
-
   onSelectChange(): void {
     let search_lang: string = this.editor.compiler;
+
     for (let i in this.editorInput.languages) {
-      if (this.editorInput[i].language == search_lang) {
-        this.editor.code_content = this.editorInput[i].code;
-        this.selectedLang = i;
+      if (this.editorInput.languages[i].language == search_lang) {
+        this.editor.code_content = this.editorInput.languages[i].code;
+        this.current_selected_language_index = +i;
         return;
       }
     }
@@ -81,54 +80,16 @@ export class EditorCodeComponent implements OnInit {
     this.editor.code_content = "";
   }
 
-  selectedLang: string = "";
-
-  onCodeChange(event): void {
-    this.onCodeUpdate();
-    console.log(event.detail.target.selectionStart);
-    let newContent: string;
-    if (event.detail.inputType == "insertLineBreak") {
-      newContent = this.autoIndent(
-        this.previous[this.selectedLang].code,
-        this.editor.code_content
-      );
-    }
-    this.previous[this.selectedLang] = this.editor.code_content;
-    this.editor.code_content = newContent;
-  }
-
-  autoIndent(str1, str2): string {
-    for (let i in str2) if (str1[i] != str2[i]) break; // ->\n
-
-    return str2;
-  }
-
   onCodeUpdate(): void {
-    if (this.selectedLang == "") {
-      let search_lang: string = this.editor.compiler;
-
-      for (let i in this.editorInput.languages)
-        if (this.editorInput.languages[i].language == search_lang)
-          this.selectedLang = i;
-    }
-
-    this.editorInput.languages[
-      this.selectedLang
-    ].code = this.editor.code_content;
-    if (
-      this.editorInput.languages[this.selectedLang].code !=
-      this.templates[this.selectedLang].code
-    ) {
-      this.editorInput.languages[this.selectedLang].language =
-        this.templates[this.selectedLang].language + "  📝";
-      this.editor.compiler = this.editorInput.languages[
-        this.selectedLang
-      ].language;
+    let i = this.current_selected_language_index;
+    this.editorInput.languages[i].code = this.editor.code_content;
+    if (this.editorInput.languages[i].code != this.templates[i].code) {
+      this.editorInput.languages[i].language =
+        this.templates[i].language + "  📝";
+      this.editor.compiler = this.editorInput.languages[i].language;
     }
 
     return;
-
-    // this.presentToast("No such language found");
   }
 
   async presentToast(msg: string): Promise<void> {
@@ -150,7 +111,6 @@ export class EditorCodeComponent implements OnInit {
     this.quizmode = this.route.snapshot.paramMap.get("quizfolder") != null;
     try {
       this.templates = (await this.cApi.getTemplateJSON()).languages;
-      this.previous = { ...this.templates };
       let i = -1,
         j = 0;
       while (
@@ -213,8 +173,6 @@ export class EditorCodeComponent implements OnInit {
     };
     this.onSelectChange();
   }
-
-  @ViewChild("slidesTag", { static: false }) slidesTag: IonSlides;
 
   async onSlideChange(): Promise<void> {
     let current_slides = await this.slidesTag.getActiveIndex();
