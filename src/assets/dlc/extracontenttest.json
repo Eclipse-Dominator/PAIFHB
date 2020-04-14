@@ -1,0 +1,32 @@
+[
+  {
+    "data": [
+      {
+        "title": "For Loop",
+        "icon": "globe-outline",
+        "id": "forloops"
+      },
+      {
+        "title": "While Loop",
+        "icon": "globe-outline",
+        "id": "whileloops"
+      }
+    ],
+    "category": "Loops"
+  },
+  {
+    "data": [
+      {
+        "title": "Iteration",
+        "icon": "globe-outline",
+        "id": "iteration"
+      },
+      {
+        "title": "Recursion",
+        "icon": "globe-outline",
+        "id": "recursion"
+      }
+    ],
+    "category": "Basic Logic"
+  }
+]

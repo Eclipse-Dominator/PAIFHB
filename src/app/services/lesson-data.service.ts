@@ -46,7 +46,6 @@ export interface AppState {
   quizMode: boolean;
 }
 
-/* Confused noises */
 @Injectable({
   providedIn: "root",
 })

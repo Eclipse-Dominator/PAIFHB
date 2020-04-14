@@ -1,7 +1,8 @@
 {
   "name": "PAIFHB",
   "integrations": {
-    "capacitor": {}
+    "capacitor": {},
+    "cordova": {}
   },
   "type": "angular"
 }
