@@ -1,0 +1,107 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons> </ion-buttons>
+    <ion-title>add-content</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-slides [options]="slideOpts" #ionslides>
+    <ion-slide>
+      <ion-list>
+        <ion-reorder-group
+          (ionItemReorder)="doReorderPage($event)"
+          disabled="false"
+        >
+          <div *ngFor="let page of pageList">
+            <ion-item-divider>
+              <ion-input [(ngModel)]="page.name" placeholder="Page"></ion-input>
+              <div
+                button
+                slot="end"
+                class="ion-margin-horizontal"
+                (click)="pageAction(page)"
+              >
+                <ion-icon name="create" slot="icon-only"></ion-icon>
+              </div>
+              <div
+                button
+                slot="end"
+                class="ion-margin-horizontal"
+                (click)="pasteItem(page)"
+                *ngIf="copiedItem"
+              >
+                <ion-icon name="clipboard-outline" slot="icon-only"></ion-icon>
+              </div>
+              <ion-reorder
+                slot="end"
+                class="ion-margin-horizontal"
+              ></ion-reorder>
+            </ion-item-divider>
+
+            <ion-reorder-group
+              (ionItemReorder)="doReorderChild($event,page)"
+              disabled="false"
+            >
+              <div *ngFor="let item of page.content">
+                <app-edit-item-list
+                  [inputItem]="item"
+                  (deleted)="deleteItem($event,item,page)"
+                  (copied)="copyItem($event,item)"
+                  (demo)="enterCodePage($event,item)"
+                  (quiz)="enterQuizPage($event,item)"
+                ></app-edit-item-list>
+              </div>
+            </ion-reorder-group>
+          </div>
+        </ion-reorder-group>
+      </ion-list>
+    </ion-slide>
+    <ion-slide>
+      <app-editor-code #code_editor> </app-editor-code>
+    </ion-slide>
+  </ion-slides>
+
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed" *ngIf="!onEditor">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="start">
+      <ion-fab-button (click)="add_new_page()">
+        <ion-icon name="document"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+    <ion-fab-list side="end" *ngIf="copiedPage">
+      <ion-fab-button (click)="add_new_page(duplicatePage(copiedPage))"
+        ><ion-icon name="clipboard"></ion-icon
+      ></ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
+  <ion-fab
+    vertical="bottom"
+    horizontal="end"
+    slot="fixed"
+    *ngIf="onEditor && !quizEditor"
+  >
+    <ion-fab-button>
+      <ion-icon name="ellipsis-horizontal"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button color="danger" (click)="cancel_editor($event)">
+        <ion-icon name="close"></ion-icon>
+      </ion-fab-button>
+
+      <ion-fab-button color="success" (click)="export_editor($event)">
+        <ion-icon name="checkmark"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="quizEditor">
+    <ion-fab-button color="light" (click)="toggleCode()">
+      <ion-icon name="code-slash-outline" *ngIf="!onEditor"></ion-icon>
+      <ion-icon name="book" *ngIf="onEditor"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

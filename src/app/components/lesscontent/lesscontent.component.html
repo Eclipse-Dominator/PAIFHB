@@ -17,15 +17,15 @@
       <ion-button
         (click)="codeNav(element.link, element.type)"
         *ngSwitchCase="'demo'"
-        >Try it out!</ion-button
+        >{{ element.content }}</ion-button
       >
       <ion-button
         (click)="codeNav(element.link, element.type)"
         *ngSwitchCase="'quiz'"
-        >Quiz!</ion-button
+        >{{ element.content }}</ion-button
       >
       <p *ngSwitchCase="'p'" class="ion-text-left">
-        {{ element.content }}
+        {{ element.content }} 
       </p>
       <br *ngSwitchDefault />
     </div>

@@ -21,12 +21,3 @@
 345
 13656
 113
-%%%%segment-splitter>>>>>cpp||||||||||
-#include <cstdio>
-
-using namespace std;
-
-int main(){
-
- 
-}

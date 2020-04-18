@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { NavController, IonSlides } from "@ionic/angular";
 
+import { LessonDataService } from "../../services/lesson-data.service";
 import {
-  LessonDataService,
   LessonData,
   LessonItem,
   EditorInputs,
-} from "../../services/lesson-data.service";
+} from "../../services/interfaces";
 import { EditorCodeComponent } from "../../components/editor-code/editor-code.component";
 
 @Component({

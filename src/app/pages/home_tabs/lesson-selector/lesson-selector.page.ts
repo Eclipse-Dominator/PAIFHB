@@ -1,11 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { NavController } from "@ionic/angular";
 
-import {
-  LessonDataService,
-  LessonData,
-  LessonItem,
-} from "../../../services/lesson-data.service";
+import { LessonDataService } from "../../../services/lesson-data.service";
+
+import { LessonData, LessonItem } from "../../../services/interfaces";
 
 @Component({
   selector: "app-lesson-selector",

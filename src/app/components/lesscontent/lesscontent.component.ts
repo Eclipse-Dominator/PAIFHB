@@ -1,16 +1,13 @@
 import {
   Component,
   OnInit,
-  Input,
   Output,
   EventEmitter,
   ViewChild,
 } from "@angular/core";
 import { NavController, IonSlides } from "@ionic/angular";
-import {
-  LessonDataService,
-  RawSlide,
-} from "../../services/lesson-data.service";
+import { RawSlide } from "../../services/interfaces";
+import { LessonDataService } from "../../services/lesson-data.service";
 import { ActivatedRoute } from "@angular/router";
 
 @Component({
@@ -65,13 +62,13 @@ export class LesscontentComponent implements OnInit {
     if (quizID) {
       let file_url = this.dataSvce.getSelected().id + "/" + quizID;
       this.emitQuiz.emit(await this.dataSvce.loadEditor(file_url, true));
-      content_generator = this.dataSvce.getSelectedContent(quizID);
+      content_generator = await this.dataSvce.getSelectedContent(quizID);
     } else {
-      content_generator = this.dataSvce.getSelectedContent();
+      content_generator = await this.dataSvce.getSelectedContent();
     }
 
     try {
-      for await (let slide of content_generator) {
+      for (let slide of content_generator) {
         this.total_page += 1;
         this.slides.push(slide);
       }

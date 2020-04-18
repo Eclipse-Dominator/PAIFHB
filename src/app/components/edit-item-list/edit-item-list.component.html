@@ -1,0 +1,58 @@
+<div [ngSwitch]="inputItem.type">
+  <ion-item-sliding>
+    <div *ngSwitchCase="'title'">
+      <ion-item>
+        <ion-label color="secondary" position="floating">
+          Title
+        </ion-label>
+        <ion-input
+          [(ngModel)]="inputItem.content"
+          placeholder="Enter Title"
+        ></ion-input>
+      </ion-item>
+    </div>
+    <div *ngSwitchCase="'p'">
+      <ion-item>
+        <ion-label color="secondary" position="floating">
+          Paragraph
+        </ion-label>
+        <ion-textarea
+          rows="5"
+          [(ngModel)]="inputItem.content"
+          placeholder="Enter Content"
+        ></ion-textarea>
+      </ion-item>
+    </div>
+    <div *ngSwitchCase="'demo'">
+      <ion-item button="true" (click)="view_demo_details($event,inputItem)" detail="true">
+        <ion-input
+          [(ngModel)]="inputItem.link"
+          placeholder="Enter Demo ID"
+        ></ion-input>
+      </ion-item>
+    </div>
+    <div *ngSwitchCase="'quiz'">
+      <ion-item button="true" (click)="view_quiz_details($event,inputItem)" detail="true">
+        <ion-input
+          [(ngModel)]="inputItem.link"
+          placeholder="Enter Quiz ID"
+        ></ion-input>
+      </ion-item>
+    </div>
+
+    <ion-item-options side="start">
+      <ion-reorder>
+        <ion-item-option class="bg_transparent">Reorder</ion-item-option>
+      </ion-reorder>
+    </ion-item-options>
+
+    <ion-item-options side="end">
+      <ion-item-option (click)="onCopy($event)" color="tertiary">
+        <ion-icon name="copy-outline" slot="icon-only"></ion-icon>
+      </ion-item-option>
+      <ion-item-option (click)="onDelete($event)" color="danger">
+        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+      </ion-item-option>
+    </ion-item-options>
+  </ion-item-sliding>
+</div>

@@ -1,50 +1,16 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import data from "../../assets/content/lesson_data.json";
+import {
+  EditorInputs,
+  Language,
+  LessonData,
+  LessonItem,
+  RawHTML,
+  RawSlide,
+  AppState,
+} from "./interfaces";
 //import { HTTP } from '@ionic-native/http/ngx/'; // mobile
-
-// Handles data state
-
-export interface EditorInputs {
-  input: string;
-  quiz_output: string;
-  quiz_input: string;
-  languages: Language[];
-}
-
-export interface Language {
-  language: string;
-  code: string;
-}
-
-export interface LessonData {
-  data: LessonItem[];
-  category: string;
-}
-
-export interface LessonItem {
-  title: string;
-  icon: string;
-  id: string;
-}
-
-export interface RawHTML {
-  type: string;
-  content: string;
-  link: string;
-  style: string;
-}
-
-export interface RawSlide {
-  content: RawHTML[];
-}
-
-export interface AppState {
-  selectedLesson: LessonItem;
-  defaultEditorInput: EditorInputs;
-  demoMode: boolean;
-  quizMode: boolean;
-}
 
 /* Confused noises */
 @Injectable({
@@ -77,17 +43,54 @@ export class LessonDataService {
     return this.parseCodeTxt(rawCode);
   }
 
+  public reverseParseCode(ei: EditorInputs): string {
+    let outputString: string = "";
+    for (let x in ei) {
+      if (ei[x]) {
+        switch (x) {
+          case "input":
+            outputString += "%%%%segment-splitter>>>>>input||||||||||\n";
+            outputString += ei.input;
+            outputString += "\n";
+            break;
+          case "quiz_output":
+            outputString += "%%%%segment-splitter>>>>>quiz_output||||||||||\n";
+            outputString += ei.quiz_output;
+            outputString += "\n";
+            break;
+          case "quiz_input":
+            outputString += "%%%%segment-splitter>>>>>quiz_input||||||||||\n";
+            outputString += ei.quiz_input;
+            outputString += "\n";
+            break;
+          case "languages":
+            for (let lang of ei.languages) {
+              outputString += "%%%%segment-splitter>>>>>";
+              outputString += lang.language;
+              outputString += "||||||||||\n";
+              outputString += lang.code;
+              outputString += "\n";
+            }
+            break;
+          default:
+            break;
+        }
+      }
+    }
+    return outputString;
+  }
+
   public parseCodeTxt(rawString: string): EditorInputs {
     let jsonArray: string[] = [];
     rawString = rawString.replace(/\r/g, "");
     let type_split: RegExp = /(?:\n?)(?:%%%%segment-splitter>>>>>)/;
     let code_split: RegExp = /(?:\|\|\|\|\|\|\|\|\|\|)(?:\n?)/;
 
-    let jsonString: string = "";
+    let jsonString: string = '"languages":[';
 
     let rawCodes: string[] = rawString.split(type_split);
 
-    let seperator: string = '"languages":[{\n"language":"';
+    let seperator: string = '{\n"language":"';
 
     for (let code of rawCodes) {
       if (code.trim() == "") {
@@ -112,7 +115,6 @@ export class LessonDataService {
 
     jsonString += "]";
     jsonArray.push(jsonString);
-
     let parsedJson: EditorInputs = JSON.parse(
       "{\n" + jsonArray.join(",") + "\n}"
     );
@@ -132,22 +134,17 @@ export class LessonDataService {
     return this.appState.selectedLesson;
   }
 
-  public async *getSelectedContent(folder_string: string = "") {
+  public async getSelectedContent(folder_string: string = "") {
     // if folder_string not empty, parse question.txt instead
     let url: string =
       "../assets/content/" + this.appState.selectedLesson.id + "/";
     url += folder_string ? folder_string + "/" : "";
     url += "content.txt";
-    let content: string[];
-
-    content = (await this.readFile(url)).split("\n");
-    let content_generator = this.parseData(content);
-    for await (let slide of content_generator) {
-      yield slide;
-    }
+    let content: string = await this.readFile(url);
+    return this.parseData(content.split("\n"));
   }
 
-  public async *parseData(content: string[]) {
+  public *parseData(content: string[]) {
     let i = -1;
     let j = 0;
 
@@ -155,8 +152,14 @@ export class LessonDataService {
 
     while (++i < content.length) {
       content[i] = content[i].trim();
-
-      if (content[i] == "<-- end-page -->") {
+      let within_tag = /^(?:<-- )([\S| ]+)(?: -->)$/g.exec(content[i]);
+      let params: string[] = [content[i]];
+      if (within_tag) {
+        params = within_tag[1].split("/////");
+      }
+      if (params[0] == "end-page") {
+        current_page.name = "Page" + ++j;
+        if (params[1]) current_page.name = params[1];
         yield { ...current_page }; // yield generated page
         current_page.content = [];
         continue;
@@ -165,31 +168,30 @@ export class LessonDataService {
       let slide_element: RawHTML = {
         type: "",
         content: "",
-        link: "",
-        style: "",
       };
 
-      switch (content[i]) {
-        case "<-- title -->":
+      switch (params[0]) {
+        case "title":
           slide_element.content = content[++i];
           //console.log(i);
           slide_element.type = "title";
           break;
 
-        case "<-- demo -->":
-          slide_element.link = content[++i];
-          //console.log(slide_element.link);
+        case "demo":
+          slide_element.content = content[++i].trim();
+          slide_element.link = params[1];
           slide_element.type = "demo";
           break;
 
-        case "<-- quiz -->":
-          slide_element.link = content[++i];
-          //console.log(slide_element.link);
+        case "quiz":
+          slide_element.content = content[++i].trim();
+          slide_element.link = params[1];
           slide_element.type = "quiz";
           break;
-        case "<-- image -->":
-          slide_element.link = content[++i];
+        case "image":
+          slide_element.content = content[++i].trim();
           slide_element.type = "image";
+          slide_element.link = params[1];
           break;
         case "":
           slide_element.type = "br";
@@ -210,7 +212,7 @@ export class LessonDataService {
     return;
   }
 
-  private readFile(url: string) {
+  private readFile(url: string): Promise<string> {
     console.log(url);
     return this.http.get(url, { responseType: "text" }).toPromise();
   }
