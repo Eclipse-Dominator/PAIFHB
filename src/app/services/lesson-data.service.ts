@@ -17,6 +17,8 @@ import {
   providedIn: "root",
 })
 export class LessonDataService {
+  // firebase setup
+
   private rawData: LessonData[] = data;
 
   private appState: AppState = {

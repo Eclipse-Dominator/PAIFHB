@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1006233367684",
+    "firebase_url": "https://paifhb.firebaseio.com",
+    "project_id": "paifhb",
+    "storage_bucket": "paifhb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1006233367684:android:93820786396d0eaec27ed1",
+        "android_client_info": {
+          "package_name": "io.ionic.paifhb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1006233367684-4q6enl92g5edbua81s5fcoqab8a3sssg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaEfnKOV5i9VN4hgJzRC6VwhLWwoQQkwk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1006233367684-4q6enl92g5edbua81s5fcoqab8a3sssg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1006233367684-a1c418u424fh1qr55fuk3761dtiq1ru5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "io.ionic.paifhb"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
