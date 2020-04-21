@@ -31,9 +31,13 @@ export class AddContentPage implements AfterViewInit {
         if (this.navParams.quizEditor) this.quizEditor = true;
       } else {
         // u shouldnt be on this page
-        this.navCtrl.navigateRoot("");
+        //this.navCtrl.navigateRoot("");
       }
     });
+  }
+
+  goHome() {
+    this.navCtrl.navigateRoot("");
   }
 
   @ViewChild("code_editor", { static: false }) code_editor: EditorCodeComponent;

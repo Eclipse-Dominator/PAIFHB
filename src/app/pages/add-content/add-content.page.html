@@ -8,6 +8,7 @@
 <ion-content>
   <ion-slides [options]="slideOpts" #ionslides>
     <ion-slide>
+      <ion-button (click)="goHome()">Go Home</ion-button>
       <ion-list>
         <ion-reorder-group
           (ionItemReorder)="doReorderPage($event)"

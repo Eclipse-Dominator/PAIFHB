@@ -5,5 +5,11 @@
 </ion-header>
 
 <ion-content>
-  <ion-button color="danger">Login with Google</ion-button>
+  <ion-button color="danger" (click)="doGoogleLogin()"
+    >Login with Google</ion-button
+  >
+  <ion-button color="primary" (click)="testFireCloud()"
+    >test firecloud</ion-button
+  >
+  <ion-button color="secondary" (click)="signOut()">Sign out</ion-button>
 </ion-content>

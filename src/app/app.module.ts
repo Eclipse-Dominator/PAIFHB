@@ -12,6 +12,11 @@ import { AppComponent } from "./app.component";
 // import { HTTP } from '@ionic-native/http/ngx';
 import { HttpClientModule } from "@angular/common/http";
 
+import * as firebase from "firebase";
+import { environment } from "../environments/environment";
+
+firebase.initializeApp(environment.firebase);
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],

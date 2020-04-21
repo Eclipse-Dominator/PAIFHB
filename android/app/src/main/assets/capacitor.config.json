@@ -2,5 +2,6 @@
   "appId": "com.example.app",
   "appName": "PAIFHB",
   "webDir": "www",
-  "npmClient": "npm"
+  "npmClient": "npm",
+  "linuxAndroidStudioPath": "/home/doomkiller/android-studio/bin/studio.sh"
 }

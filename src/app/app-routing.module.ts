@@ -3,20 +3,6 @@ import { PreloadAllModules, RouterModule, Routes } from "@angular/router";
 
 const routes: Routes = [
   {
-    path: "add-content",
-    loadChildren: () =>
-      import("./pages/add-content/add-content.module").then(
-        (m) => m.AddContentPageModule
-      ),
-  },
-  {
-    path: "edit-quiz",
-    loadChildren: () =>
-      import("./pages/add-content/add-content.module").then(
-        (m) => m.AddContentPageModule
-      ),
-  },
-  {
     path: "lesson",
     loadChildren: () =>
       import("./pages/lesson/lesson.module").then((m) => m.LessonPageModule),
@@ -34,14 +20,29 @@ const routes: Routes = [
       import("./pages/lesson/lesson.module").then((m) => m.LessonPageModule),
   },
   {
-    path: "",
-    redirectTo: "add-content",
-    pathMatch: "full",
-  },  {
-    path: 'login',
-    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
+    path: "add-content",
+    loadChildren: () =>
+      import("./pages/add-content/add-content.module").then(
+        (m) => m.AddContentPageModule
+      ),
   },
-
+  {
+    path: "edit-quiz",
+    loadChildren: () =>
+      import("./pages/add-content/add-content.module").then(
+        (m) => m.AddContentPageModule
+      ),
+  },
+  {
+    path: "login",
+    loadChildren: () =>
+      import("./login/login.module").then((m) => m.LoginPageModule),
+  },
+  {
+    path: "",
+    redirectTo: "home",
+    pathMatch: "full",
+  },
 ];
 @NgModule({
   imports: [
